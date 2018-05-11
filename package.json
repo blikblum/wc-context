@@ -1,0 +1,68 @@
+{  
+  "name": "wc-context",
+  "version": "0.2.0",
+  "description": "Simple context for HTML custom elements",
+  "repository": "blikblum/wc-context",
+  "author": "Luiz Américo Pereira Câmara",
+  "contributors": [
+    "Luiz Américo Pereira Câmara"
+  ],
+  "license": "MIT",
+  "keywords": ["webcomponent", "custom-element", "context"],
+  "main": "index.js",
+  "module": "index.esm.js",
+  "jsnext:main": "index.esm.js",
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "browsers": [
+              "ie 11",
+              "last 2 versions",
+              "Firefox ESR"
+            ]
+          },
+          "modules": false
+        }
+      ]
+    ],
+    "env": {
+      "test": {
+        "presets": [
+          [
+            "env",
+            {
+              "targets": {
+                "node": "current"
+              }
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "jest": {
+    "modulePathIgnorePatterns": ["<rootDir>/dist/"]
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^22.4.3",
+    "babel-preset-env": "^1.7.0",
+    "del": "^3.0.0",
+    "jest": "^22.4.3",
+    "rollup": "^0.58.2",
+    "rollup-plugin-babel": "^3.0.4",
+    "standard": "^11.0.1"
+  },
+  "scripts": {
+    "lint": "standard src test tools",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cover": "jest --coverage",
+    "build": "node tools/build",
+    "prepublish": "npm run build"
+  }
+}
