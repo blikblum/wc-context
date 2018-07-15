@@ -28,6 +28,7 @@ describe('context', () => {
     let grandfather2El
     let parentEl
     let childEl
+    let child3El
 
     beforeEach(() => {
       rootEl = document.getElementById('root')
@@ -35,6 +36,7 @@ describe('context', () => {
       grandfather2El = document.getElementById('grandfather2')
       parentEl = document.getElementById('parent')
       childEl = document.getElementById('child')
+      child3El = document.getElementById('child3')
       addContext(grandfatherEl, 'key', 'value')
     })
 
@@ -62,7 +64,9 @@ describe('context', () => {
 
     test('should not be acessible in sibling nodes', () => {
       defineContextProp(grandfather2El, 'context')
+      defineContextProp(child3El, 'context')
       expect(grandfather2El.context.key).toBeUndefined()
+      expect(child3El.context.key).toBeUndefined()
     })
 
     test('should return same value when called repeatedly', () => {
@@ -72,7 +76,7 @@ describe('context', () => {
       expect(childEl.context.key).toBe('value')
     })
 
-    describe('when added to a child node', () => {
+    describe('and when added to a child node', () => {
       beforeEach(() => {
         addContext(parentEl, 'key', 'value2')
       })
@@ -81,13 +85,13 @@ describe('context', () => {
         removeContext(parentEl, 'key')
       })
 
-      test('should override context defined in a parent node', () => {
+      test('should override parent context', () => {
         defineContextProp(childEl, 'context')
         expect(childEl.context.key).toBe('value2')
       })
     })
 
-    describe('when added to a child node with different key', () => {
+    describe('and when added to a child node with different key', () => {
       beforeEach(() => {
         addContext(parentEl, 'key2', 'value2')
       })
@@ -96,13 +100,30 @@ describe('context', () => {
         removeContext(parentEl, 'key2')
       })
 
-      test('should not override context defined in a parent node ', () => {
+      test('should not override parent context', () => {
         defineContextProp(childEl, 'context')
         expect(childEl.context.key).toBe('value')
       })
     })
 
-    describe('when added with a function as value', () => {
+    describe('and when added to a sibling node', () => {
+      beforeEach(() => {
+        addContext(grandfather2El, 'key', 'value2')
+      })
+
+      afterEach(() => {
+        removeContext(grandfather2El, 'key')
+      })
+
+      test('should keep independent values', () => {
+        defineContextProp(childEl, 'context')
+        defineContextProp(child3El, 'context')
+        expect(childEl.context.key).toBe('value')
+        expect(child3El.context.key).toBe('value2')
+      })
+    })
+
+    describe('with a function as value', () => {
       let fn = jest.fn().mockReturnThis()
       beforeEach(() => {
         addContext(parentEl, 'key2', fn)
