@@ -1,8 +1,8 @@
 /* eslint-env jest */
-import { defineContextProp, addContext, removeContext } from '../src'
+import { defineContextProp, addContext, removeContext } from '../src/context'
 
 describe('context', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     document.body.innerHTML = `
       <div id="root">
         <div id="grandfather">
