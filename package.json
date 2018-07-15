@@ -13,9 +13,9 @@
     "custom-element",
     "context"
   ],
-  "main": "index.js",
-  "module": "index.esm.js",
-  "jsnext:main": "index.esm.js",
+  "main": "dist/index.esm.js",
+  "module": "dist/index.esm.js",
+  "jsnext:main": "dist/index.esm.js",
   "babel": {
     "presets": [
       [
