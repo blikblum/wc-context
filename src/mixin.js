@@ -1,5 +1,5 @@
 
-import { defineContextProp, addContext, removeContext } from './context'
+import { defineContextProp, addContext, removeContext, invalidateContext, observeContext } from './context'
 
 const withContext = (Base) => {
   return class extends Base {
@@ -10,6 +10,10 @@ const withContext = (Base) => {
 
     connectedCallback () {
       super.connectedCallback && super.connectedCallback()
+      const observedContexts = this.constructor.observedContexts
+      if (observedContexts) {
+        observedContexts.forEach(context => observeContext(this, context))
+      }
       const childContext = this.constructor.childContext
       if (childContext) {
         Object.keys(childContext).forEach(key => {
@@ -26,6 +30,10 @@ const withContext = (Base) => {
           removeContext(this, key)
         })
       }
+    }
+
+    invalidateContext (name) {
+      invalidateContext(this, name)
     }
   }
 }

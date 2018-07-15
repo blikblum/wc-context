@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { defineContextProp, addContext, removeContext } from '../src/context'
+import { defineContextProp, addContext, removeContext, observeContext, invalidateContext } from '../src/context'
 
 describe('context', () => {
   beforeEach(() => {
@@ -124,9 +124,10 @@ describe('context', () => {
     })
 
     describe('with a function as value', () => {
-      let fn = jest.fn().mockReturnThis()
+      let valueFn
       beforeEach(() => {
-        addContext(parentEl, 'key2', fn)
+        valueFn = jest.fn().mockReturnThis()
+        addContext(parentEl, 'key2', valueFn)
       })
 
       afterEach(() => {
@@ -136,7 +137,22 @@ describe('context', () => {
       test('should call the function with el as this', () => {
         defineContextProp(childEl, 'context')
         expect(childEl.context.key2).toBe(parentEl)
-        expect(fn).toHaveBeenCalledTimes(1)
+        expect(valueFn).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    describe('and observed by a child node', () => {
+      let callback
+      beforeEach(() => {
+        callback = jest.fn()
+        childEl.contextChangedCallback = callback
+        observeContext(childEl, 'key')
+      })
+
+      test('should notify the observer when invalidated', () => {
+        invalidateContext(grandfatherEl, 'key')
+        expect(callback).toHaveBeenCalledTimes(1)
+        expect(callback).toHaveBeenCalledWith('key')
       })
     })
   })
