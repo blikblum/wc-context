@@ -13,13 +13,13 @@ function findContext (el, name) {
 }
 
 const proxyHandler = {
-  get: function (target, property, receiver) {
+  get: function (target, property) {
     return findContext(target, property)
   }
 }
 
 function getter () {
-  return new Proxy(this, proxyHandler)
+  return this.__wcContextProxy || (this.__wcContextProxy = new Proxy(this, proxyHandler))
 }
 
 function defineContextProp (obj, propName) {
