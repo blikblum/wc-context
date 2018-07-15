@@ -3,10 +3,10 @@ const contextMap = Object.create(null)
 function findContext (el, name) {
   const contexts = contextMap[name]
   if (contexts) {
-    for (let i = contexts.length - 1; i === 0; i--) {
+    for (let i = contexts.length - 1; i >= 0; i--) {
       const mapping = contexts[i]
       if (mapping.el.contains(el)) {
-        return typeof mapping.value === 'function' ? mapping.value.call(el) : mapping.value
+        return typeof mapping.value === 'function' ? mapping.value.call(mapping.el) : mapping.value
       }
     }
   }
