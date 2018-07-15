@@ -1,4 +1,4 @@
-{  
+{
   "name": "wc-context",
   "version": "0.2.0",
   "description": "Simple context for HTML custom elements",
@@ -8,7 +8,11 @@
     "Luiz Américo Pereira Câmara"
   ],
   "license": "MIT",
-  "keywords": ["webcomponent", "custom-element", "context"],
+  "keywords": [
+    "webcomponent",
+    "custom-element",
+    "context"
+  ],
   "main": "index.js",
   "module": "index.esm.js",
   "jsnext:main": "index.esm.js",
@@ -44,17 +48,19 @@
     }
   },
   "jest": {
-    "modulePathIgnorePatterns": ["<rootDir>/dist/"]
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ]
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
-    "babel-jest": "^22.4.3",
+    "babel-jest": "^23.4.0",
     "babel-preset-env": "^1.7.0",
     "del": "^3.0.0",
-    "jest": "^22.4.3",
-    "rollup": "^0.58.2",
-    "rollup-plugin-babel": "^3.0.4",
+    "jest": "^23.4.1",
+    "rollup": "^0.62.0",
+    "rollup-plugin-babel": "^3.0.7",
     "standard": "^11.0.1"
   },
   "scripts": {
