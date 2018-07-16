@@ -1,6 +1,6 @@
 {
   "name": "wc-context",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Simple context for HTML custom elements",
   "repository": "blikblum/wc-context",
   "author": "Luiz Américo Pereira Câmara",
@@ -13,9 +13,8 @@
     "custom-element",
     "context"
   ],
-  "main": "dist/index.esm.js",
-  "module": "dist/index.esm.js",
-  "jsnext:main": "dist/index.esm.js",
+  "main": "dist/wc-context.js",
+  "module": "dist/wc-context.js",  
   "babel": {
     "presets": [
       [
