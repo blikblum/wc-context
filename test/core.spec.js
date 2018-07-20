@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { defineContextProp, addChildContext, removeChildContext, observeContext, updateContext, defineChildContextProp } from '../src/context'
+import { defineContextProp, addChildContext, removeChildContext, observeContext, updateContext, defineChildContextProp } from '../src/core'
 
 describe('context', () => {
   beforeEach(() => {

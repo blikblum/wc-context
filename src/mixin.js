@@ -1,5 +1,5 @@
 
-import { defineContextProp, addChildContext, removeChildContext, observeContext, defineChildContextProp } from './context'
+import { defineContextProp, addChildContext, removeChildContext, observeContext, defineChildContextProp } from './core'
 
 const withContext = (Base) => {
   return class extends Base {
