@@ -1,11 +1,12 @@
 
-import { defineContextProp, addContext, removeContext, invalidateContext, observeContext } from './context'
+import { defineContextProp, addChildContext, removeChildContext, observeContext, defineChildContextProp } from './context'
 
 const withContext = (Base) => {
   return class extends Base {
     constructor () {
       super()
       defineContextProp(this, 'context')
+      defineChildContextProp(this, 'childContext')
     }
 
     connectedCallback () {
@@ -14,26 +15,19 @@ const withContext = (Base) => {
       if (observedContexts) {
         observedContexts.forEach(context => observeContext(this, context))
       }
-      const childContext = this.constructor.childContext
-      if (childContext) {
-        Object.keys(childContext).forEach(key => {
-          addContext(this, key, childContext[key])
-        })
-      }
+
+      const childContext = this.childContext
+      Object.keys(childContext).forEach(key => {
+        addChildContext(this, key, childContext[key])
+      })
     }
 
     disconnectedCallback () {
       super.disconnectedCallback && super.disconnectedCallback()
-      const childContext = this.constructor.childContext
-      if (childContext) {
-        Object.keys(childContext).forEach(key => {
-          removeContext(this, key)
-        })
-      }
-    }
-
-    invalidateContext (name) {
-      invalidateContext(this, name)
+      const childContext = this.childContext
+      Object.keys(childContext).forEach(key => {
+        removeChildContext(this, key)
+      })
     }
   }
 }
