@@ -25,8 +25,8 @@ function defineChildContextProp (el, name) {
         const propValue = value[propName]
         if (childContext[propName] !== propValue) {
           updateContext(this, propName, propValue)
-          childContext[propName] = propValue
         }
+        childContext[propName] = propValue
       })
     }
   })

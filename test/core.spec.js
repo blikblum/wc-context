@@ -84,6 +84,17 @@ describe('context', () => {
       expect(childEl.context.key).toBe('value')
     })
 
+    test('should update childContext', () => {
+      grandfatherEl.childContext = {
+        key: 'value',
+        key2: undefined
+      }
+      expect(grandfatherEl.childContext).toMatchObject({
+        key: 'value',
+        key2: undefined
+      })
+    })
+
     describe('and when added to a child node', () => {
       beforeEach(() => {
         defineChildContextProp(parentEl, 'childContext')
