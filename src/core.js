@@ -49,17 +49,11 @@ function sendContextEvent (el, name) {
   return event
 }
 
-const contextProxyHandler = {
-  get: function (target, propName) {
-    return target.__wcContext[propName]
-  }
-}
-
 function defineContextProp (el, name) {
   el.__wcContext = {}
   Object.defineProperty(el, name, {
     get () {
-      return this.__wcContextProxy || (this.__wcContextProxy = new Proxy(this, contextProxyHandler))
+      return this.__wcContext
     }
   })
 }
