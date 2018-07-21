@@ -69,7 +69,7 @@ function defineChildContextProp (el, name) {
       Object.keys(value).forEach(propName => {
         const propValue = value[propName]
         if (childContext[propName] !== propValue) {
-          updateContext(this, propName, propValue)
+          notifyContextChange(this, propName, propValue)
         }
         childContext[propName] = propValue
       })
@@ -125,7 +125,7 @@ function unobserveContext (el, name) {
   removeOrphan(el, name)
 }
 
-function updateContext (el, name, value) {
+function notifyContextChange (el, name, value) {
   const observerMap = el.__wcContextObserverMap
   const observers = observerMap && observerMap[name]
   if (observers) {
@@ -141,4 +141,4 @@ function updateContext (el, name, value) {
   }
 }
 
-export {defineContextProp, defineChildContextProp, removeChildContext, addChildContext, observeContext, unobserveContext, updateContext}
+export {defineContextProp, defineChildContextProp, removeChildContext, addChildContext, observeContext, unobserveContext, notifyContextChange}
