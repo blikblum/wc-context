@@ -91,9 +91,11 @@ function addChildContext (el, name, value) {
     event.stopPropagation()
     const targetEl = event.target
     const oldValue = targetEl.__wcContext[name]
-    targetEl.__wcContext[name] = value
-    if (targetEl.contextChangedCallback) {
-      targetEl.contextChangedCallback(name, oldValue, value)
+    if (oldValue !== value) {
+      targetEl.__wcContext[name] = value
+      if (targetEl.contextChangedCallback) {
+        targetEl.contextChangedCallback(name, oldValue, value)
+      }
     }
     observers.push(targetEl)
     event.detail.handled = true
@@ -134,9 +136,11 @@ function updateContext (el, name, value) {
   if (observers) {
     observers.forEach(observer => {
       const oldValue = observer.__wcContext[name]
-      observer.__wcContext[name] = value
-      if (observer.contextChangedCallback) {
-        observer.contextChangedCallback(name, oldValue, value)
+      if (oldValue !== value) {
+        observer.__wcContext[name] = value
+        if (observer.contextChangedCallback) {
+          observer.contextChangedCallback(name, oldValue, value)
+        }
       }
     })
   }

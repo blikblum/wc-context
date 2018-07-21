@@ -169,6 +169,12 @@ describe('context', () => {
         expect(callback).toHaveBeenCalledTimes(1)
         expect(callback).toHaveBeenCalledWith('key', 'value', 'value2')
       })
+
+      test('should not notify the observer when context is updated with same value', () => {
+        callback.mockClear()
+        updateContext(grandfatherEl, 'key', 'value')
+        expect(callback).not.toHaveBeenCalled()
+      })
     })
   })
 
