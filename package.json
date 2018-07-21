@@ -14,38 +14,7 @@
     "context"
   ],
   "main": "dist/wc-context.js",
-  "module": "dist/wc-context.js",  
-  "babel": {
-    "presets": [
-      [
-        "env",
-        {
-          "targets": {
-            "browsers": [
-              "ie 11",
-              "last 2 versions",
-              "Firefox ESR"
-            ]
-          },
-          "modules": false
-        }
-      ]
-    ],
-    "env": {
-      "test": {
-        "presets": [
-          [
-            "env",
-            {
-              "targets": {
-                "node": "current"
-              }
-            }
-          ]
-        ]
-      }
-    }
-  },
+  "module": "dist/wc-context.js",
   "jest": {
     "modulePathIgnorePatterns": [
       "<rootDir>/dist/"
@@ -55,6 +24,7 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-jest": "^23.4.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "del": "^3.0.0",
     "jest": "^23.4.1",
