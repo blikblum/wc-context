@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { defineContextProp, addChildContext, removeChildContext, observeContext, notifyContextChange, defineChildContextProp } from '../src/core'
+import { defineContextProp, addChildContext, observeContext, notifyContextChange, defineChildContextProp } from '../src/core'
 
 describe('context', () => {
   let rootEl
@@ -42,10 +42,6 @@ describe('context', () => {
       addChildContext(grandfatherEl, 'key')
     })
 
-    afterEach(() => {
-      removeChildContext(grandfatherEl, 'key')
-    })
-
     test('should be acessible in all children nodes', () => {
       defineContextProp(parentEl, 'context')
       observeContext(parentEl, 'key')
@@ -53,13 +49,6 @@ describe('context', () => {
       observeContext(childEl, 'key')
       expect(parentEl.context.key).toBe('value')
       expect(childEl.context.key).toBe('value')
-    })
-
-    test('should not be acessible after removed', () => {
-      defineContextProp(childEl, 'context')
-      observeContext(childEl, 'key')
-      removeChildContext(grandfatherEl, 'key')
-      expect(childEl.context.key).toBeUndefined()
     })
 
     test('should not be acessible in parent nodes', () => {
@@ -103,10 +92,6 @@ describe('context', () => {
         addChildContext(parentEl, 'key')
       })
 
-      afterEach(() => {
-        removeChildContext(parentEl, 'key')
-      })
-
       test('should override parent context', () => {
         defineContextProp(childEl, 'context')
         observeContext(childEl, 'key')
@@ -121,10 +106,6 @@ describe('context', () => {
         addChildContext(parentEl, 'key2')
       })
 
-      afterEach(() => {
-        removeChildContext(parentEl, 'key2')
-      })
-
       test('should not override parent context', () => {
         defineContextProp(childEl, 'context')
         observeContext(childEl, 'key')
@@ -137,10 +118,6 @@ describe('context', () => {
         defineChildContextProp(grandfather2El, 'childContext')
         grandfather2El.childContext = {key: 'value2'}
         addChildContext(grandfather2El, 'key')
-      })
-
-      afterEach(() => {
-        removeChildContext(grandfather2El, 'key')
       })
 
       test('should keep independent values', () => {
@@ -194,10 +171,6 @@ describe('context', () => {
       defineChildContextProp(grandfatherEl, 'childContext')
       grandfatherEl.childContext = {key: 'value'}
       addChildContext(grandfatherEl, 'key')
-    })
-
-    afterEach(() => {
-      removeChildContext(grandfatherEl, 'key')
     })
 
     test('should notify the observer', () => {

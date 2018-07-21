@@ -1,5 +1,5 @@
 
-import { defineContextProp, observeContext, unobserveContext, defineChildContextProp, addChildContext, removeChildContext } from './core'
+import { defineContextProp, observeContext, unobserveContext, defineChildContextProp, addChildContext } from './core'
 
 const withContext = (Base) => {
   return class extends Base {
@@ -32,11 +32,6 @@ const withContext = (Base) => {
       if (observedContexts) {
         observedContexts.forEach(context => unobserveContext(this, context))
       }
-
-      const childContext = this.childContext
-      Object.keys(childContext).forEach(key => {
-        removeChildContext(this, key)
-      })
     }
   }
 }

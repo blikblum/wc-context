@@ -93,20 +93,6 @@ function addChildContext (el, name) {
   }
 }
 
-function removeChildContext (el, name) {
-  // todo: is removeContext necessary? Probably not
-  // removeEventListener expects the listener as argument
-  // el.removeEventListener(`context-request-${name}`)
-  const observerMap = el.__wcContextObserverMap
-  const observers = observerMap && observerMap[name]
-  if (observers) {
-    observers.forEach(observer => {
-      observer.__wcContext[name] = undefined
-    })
-  }
-  observerMap[name] = []
-}
-
 function updateChildContext (el, value) {
   const childContext = el.__wcChildContext
   Object.keys(value).forEach(propName => {
@@ -145,4 +131,4 @@ function notifyContextChange (el, name, value) {
   }
 }
 
-export {defineContextProp, defineChildContextProp, removeChildContext, addChildContext, observeContext, unobserveContext, notifyContextChange, updateChildContext}
+export {defineContextProp, defineChildContextProp, addChildContext, updateChildContext, observeContext, unobserveContext, notifyContextChange}
