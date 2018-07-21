@@ -37,8 +37,14 @@ function addChildContext (el, name, value) {
   const observers = observerMap[name] || (observerMap[name] = [])
   el.addEventListener(`context-request-${name}`, (event) => {
     event.stopPropagation()
-    event.detail.value = value
-    observers.push(event.target)
+    const targetEl = event.target
+    const oldValue = targetEl.__wcContext[name]
+    targetEl.__wcContext[name] = value
+    if (targetEl.contextChangedCallback) {
+      targetEl.contextChangedCallback(name, oldValue, value)
+    }
+    observers.push(targetEl)
+    event.detail.handled = true
   })
 }
 
@@ -63,9 +69,7 @@ function observeContext (el, name) {
     cancelable: true,
     composed: true
   })
-
   el.dispatchEvent(event)
-  el.__wcContext[name] = event.detail.value
 }
 
 function updateContext (el, name, value) {

@@ -2,6 +2,13 @@
 import { defineContextProp, addChildContext, removeChildContext, observeContext, updateContext, defineChildContextProp } from '../src/core'
 
 describe('context', () => {
+  let rootEl
+  let grandfatherEl
+  let grandfather2El
+  let parentEl
+  let childEl
+  let child3El
+
   beforeEach(() => {
     document.body.innerHTML = `
       <div id="root">
@@ -20,23 +27,16 @@ describe('context', () => {
         </div>
       </div>
     `
+    rootEl = document.getElementById('root')
+    grandfatherEl = document.getElementById('grandfather')
+    grandfather2El = document.getElementById('grandfather2')
+    parentEl = document.getElementById('parent')
+    childEl = document.getElementById('child')
+    child3El = document.getElementById('child3')
   })
 
   describe('when added to a node', () => {
-    let rootEl
-    let grandfatherEl
-    let grandfather2El
-    let parentEl
-    let childEl
-    let child3El
-
     beforeEach(() => {
-      rootEl = document.getElementById('root')
-      grandfatherEl = document.getElementById('grandfather')
-      grandfather2El = document.getElementById('grandfather2')
-      parentEl = document.getElementById('parent')
-      childEl = document.getElementById('child')
-      child3El = document.getElementById('child3')
       defineChildContextProp(grandfatherEl, 'childContext')
       addChildContext(grandfatherEl, 'key', 'value')
     })
@@ -158,7 +158,13 @@ describe('context', () => {
         observeContext(childEl, 'key')
       })
 
+      test('should notify the observer', () => {
+        expect(callback).toHaveBeenCalledTimes(1)
+        expect(callback).toHaveBeenCalledWith('key', undefined, 'value')
+      })
+
       test('should notify the observer when context is updated', () => {
+        callback.mockClear()
         updateContext(grandfatherEl, 'key', 'value2')
         expect(callback).toHaveBeenCalledTimes(1)
         expect(callback).toHaveBeenCalledWith('key', 'value', 'value2')
