@@ -38,7 +38,8 @@ describe('context', () => {
   describe('when added to a node', () => {
     beforeEach(() => {
       defineChildContextProp(grandfatherEl, 'childContext')
-      addChildContext(grandfatherEl, 'key', 'value')
+      grandfatherEl.childContext = {key: 'value'}
+      addChildContext(grandfatherEl, 'key')
     })
 
     afterEach(() => {
@@ -98,7 +99,8 @@ describe('context', () => {
     describe('and when added to a child node', () => {
       beforeEach(() => {
         defineChildContextProp(parentEl, 'childContext')
-        addChildContext(parentEl, 'key', 'value2')
+        parentEl.childContext = {key: 'value2'}
+        addChildContext(parentEl, 'key')
       })
 
       afterEach(() => {
@@ -115,7 +117,8 @@ describe('context', () => {
     describe('and when added to a child node with different key', () => {
       beforeEach(() => {
         defineChildContextProp(parentEl, 'childContext')
-        addChildContext(parentEl, 'key2', 'value2')
+        parentEl.childContext = {key2: 'value2'}
+        addChildContext(parentEl, 'key2')
       })
 
       afterEach(() => {
@@ -132,7 +135,8 @@ describe('context', () => {
     describe('and when added to a sibling node', () => {
       beforeEach(() => {
         defineChildContextProp(grandfather2El, 'childContext')
-        addChildContext(grandfather2El, 'key', 'value2')
+        grandfather2El.childContext = {key: 'value2'}
+        addChildContext(grandfather2El, 'key')
       })
 
       afterEach(() => {
@@ -188,7 +192,8 @@ describe('context', () => {
       observeContext(parentEl, 'key')
 
       defineChildContextProp(grandfatherEl, 'childContext')
-      addChildContext(grandfatherEl, 'key', 'value')
+      grandfatherEl.childContext = {key: 'value'}
+      addChildContext(grandfatherEl, 'key')
     })
 
     afterEach(() => {

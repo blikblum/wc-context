@@ -20,7 +20,7 @@ const withContext = (Base) => {
       if (!this.__wcChildContextInitialized) {
         const childContext = this.childContext
         Object.keys(childContext).forEach(key => {
-          addChildContext(this, key, childContext[key])
+          addChildContext(this, key)
         })
         this.__wcChildContextInitialized = true
       }

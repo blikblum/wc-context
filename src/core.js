@@ -83,13 +83,14 @@ function defineChildContextProp (el, name) {
   })
 }
 
-function addChildContext (el, name, value) {
+function addChildContext (el, name) {
   const observerMap = el.__wcContextObserverMap || (el.__wcContextObserverMap = {})
   const observers = observerMap[name] || (observerMap[name] = [])
   const orphans = orphanMap[name]
   el.addEventListener(`context-request-${name}`, (event) => {
     event.stopPropagation()
     const targetEl = event.target
+    const value = el.__wcChildContext[name]
     const oldValue = targetEl.__wcContext[name]
     if (oldValue !== value) {
       targetEl.__wcContext[name] = value
