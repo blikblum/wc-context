@@ -75,7 +75,7 @@ function addChildContext (el, name, value) {
   if (orphans && orphans.size) {
     orphans.forEach(orphan => {
       const event = sendContextEvent(orphan, name)
-      if (event.handled) {
+      if (event.detail.handled) {
         orphans.delete(orphan)
       }
     })
