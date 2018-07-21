@@ -65,14 +65,7 @@ function defineChildContextProp (el, name) {
       return this.__wcChildContext
     },
     set (value) {
-      const childContext = this.__wcChildContext
-      Object.keys(value).forEach(propName => {
-        const propValue = value[propName]
-        if (childContext[propName] !== propValue) {
-          notifyContextChange(this, propName, propValue)
-        }
-        childContext[propName] = propValue
-      })
+      updateChildContext(this, value)
     }
   })
 }
@@ -114,6 +107,17 @@ function removeChildContext (el, name) {
   observerMap[name] = []
 }
 
+function updateChildContext (el, value) {
+  const childContext = el.__wcChildContext
+  Object.keys(value).forEach(propName => {
+    const propValue = value[propName]
+    if (childContext[propName] !== propValue) {
+      notifyContextChange(el, propName, propValue)
+    }
+    childContext[propName] = propValue
+  })
+}
+
 function observeContext (el, name) {
   const event = sendContextEvent(el, name)
   if (!event.detail.handled) {
@@ -141,4 +145,4 @@ function notifyContextChange (el, name, value) {
   }
 }
 
-export {defineContextProp, defineChildContextProp, removeChildContext, addChildContext, observeContext, unobserveContext, notifyContextChange}
+export {defineContextProp, defineChildContextProp, removeChildContext, addChildContext, observeContext, unobserveContext, notifyContextChange, updateChildContext}
