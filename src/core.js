@@ -1,3 +1,28 @@
+const orphanMap = {}
+
+function addOrphan (el, name) {
+  const orphans = orphanMap[name] || (orphanMap[name] = new Set())
+  orphans.add(el)
+}
+
+function removeOrphan (el, name) {
+  const orphans = orphanMap[name]
+  if (orphans) {
+    orphans.delete(el)
+  }
+}
+
+function sendContextEvent (el, name) {
+  const event = new CustomEvent(`context-request-${name}`, {
+    detail: {},
+    bubbles: true,
+    cancelable: true,
+    composed: true
+  })
+  el.dispatchEvent(event)
+  return event
+}
+
 const contextProxyHandler = {
   get: function (target, propName) {
     return target.__wcContext[propName]
@@ -35,6 +60,7 @@ function defineChildContextProp (el, name) {
 function addChildContext (el, name, value) {
   const observerMap = el.__wcContextObserverMap || (el.__wcContextObserverMap = {})
   const observers = observerMap[name] || (observerMap[name] = [])
+  const orphans = orphanMap[name]
   el.addEventListener(`context-request-${name}`, (event) => {
     event.stopPropagation()
     const targetEl = event.target
@@ -46,6 +72,14 @@ function addChildContext (el, name, value) {
     observers.push(targetEl)
     event.detail.handled = true
   })
+  if (orphans && orphans.size) {
+    orphans.forEach(orphan => {
+      const event = sendContextEvent(orphan, name)
+      if (event.handled) {
+        orphans.delete(orphan)
+      }
+    })
+  }
 }
 
 function removeChildContext (el, name) {
@@ -63,13 +97,14 @@ function removeChildContext (el, name) {
 }
 
 function observeContext (el, name) {
-  const event = new CustomEvent(`context-request-${name}`, {
-    detail: {},
-    bubbles: true,
-    cancelable: true,
-    composed: true
-  })
-  el.dispatchEvent(event)
+  const event = sendContextEvent(el, name)
+  if (!event.detail.handled) {
+    addOrphan(el, name)
+  }
+}
+
+function unobserveContext (el, name) {
+  removeOrphan(el, name)
 }
 
 function updateContext (el, name, value) {
@@ -86,4 +121,4 @@ function updateContext (el, name, value) {
   }
 }
 
-export {defineContextProp, defineChildContextProp, removeChildContext, addChildContext, observeContext, updateContext}
+export {defineContextProp, defineChildContextProp, removeChildContext, addChildContext, observeContext, unobserveContext, updateContext}

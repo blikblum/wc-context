@@ -171,4 +171,31 @@ describe('context', () => {
       })
     })
   })
+
+  describe('when added to a node after a child try to observe', () => {
+    let callback
+    beforeEach(() => {
+      callback = jest.fn()
+      parentEl.contextChangedCallback = callback
+
+      defineContextProp(parentEl, 'context')
+      observeContext(parentEl, 'key')
+
+      defineChildContextProp(grandfatherEl, 'childContext')
+      addChildContext(grandfatherEl, 'key', 'value')
+    })
+
+    afterEach(() => {
+      removeChildContext(grandfatherEl, 'key')
+    })
+
+    test('should notify the observer', () => {
+      expect(callback).toHaveBeenCalledTimes(1)
+      expect(callback).toHaveBeenCalledWith('key', undefined, 'value')
+    })
+
+    test('should update the observer context', () => {
+      expect(parentEl.context.key).toBe('value')
+    })
+  })
 })
