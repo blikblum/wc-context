@@ -1,5 +1,31 @@
 const orphanMap = {}
 
+const resolved = Promise.resolve()
+
+const orphanResolveQueue = {
+  contexts: new Set(),
+  running: false,
+  add (context) {
+    this.contexts.add(context)
+    if (!this.running) {
+      this.running = true
+      resolved.then(() => {
+        this.contexts.forEach(context => {
+          const orphans = orphanMap[context]
+          orphans.forEach(orphan => {
+            const event = sendContextEvent(orphan, context)
+            if (event.detail.handled) {
+              orphans.delete(orphan)
+            }
+          })
+        })
+        this.contexts.clear()
+        this.running = false
+      })
+    }
+  }
+}
+
 function addOrphan (el, name) {
   const orphans = orphanMap[name] || (orphanMap[name] = new Set())
   orphans.add(el)
@@ -73,12 +99,7 @@ function addChildContext (el, name, value) {
     event.detail.handled = true
   })
   if (orphans && orphans.size) {
-    orphans.forEach(orphan => {
-      const event = sendContextEvent(orphan, name)
-      if (event.detail.handled) {
-        orphans.delete(orphan)
-      }
-    })
+    orphanResolveQueue.add(name)
   }
 }
 
