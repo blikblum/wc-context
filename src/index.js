@@ -1,13 +1,22 @@
 
-import { defineContextProp, observeContext, unobserveContext, defineChildContextProp, addChildContext } from './core'
+import { observeContext, unobserveContext, addChildContext, updateChildContext } from './core'
 
 const withContext = (Base) => {
-  return class extends Base {
-    constructor () {
-      super()
-      defineContextProp(this, 'context')
-      defineChildContextProp(this, 'childContext')
-      this.__wcChildContextInitialized = false
+  return class extends Base {    
+    __wcContext = {}
+    __wcChildContext = {}
+    __wcChildContextInitialized = false
+
+    get context () {
+      return this.__wcContext
+    }
+
+    get childContext () {
+      return this.__wcChildContext
+    }
+
+    set childContext (value) {
+      updateChildContext(this, value)
     }
 
     connectedCallback () {

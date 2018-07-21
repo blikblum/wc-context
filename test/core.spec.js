@@ -1,5 +1,26 @@
 /* eslint-env jest */
-import { defineContextProp, addChildContext, observeContext, notifyContextChange, defineChildContextProp } from '../src/core'
+import {addChildContext, updateChildContext, observeContext, notifyContextChange} from '../src/core'
+
+function defineContextProp (el, name) {
+  el.__wcContext = {}
+  Object.defineProperty(el, name, {
+    get () {
+      return this.__wcContext
+    }
+  })
+}
+
+function defineChildContextProp (el, name) {
+  el.__wcChildContext = {}
+  Object.defineProperty(el, name, {
+    get () {
+      return this.__wcChildContext
+    },
+    set (value) {
+      updateChildContext(this, value)
+    }
+  })
+}
 
 describe('context', () => {
   let rootEl

@@ -49,27 +49,6 @@ function sendContextEvent (el, name) {
   return event
 }
 
-function defineContextProp (el, name) {
-  el.__wcContext = {}
-  Object.defineProperty(el, name, {
-    get () {
-      return this.__wcContext
-    }
-  })
-}
-
-function defineChildContextProp (el, name) {
-  el.__wcChildContext = {}
-  Object.defineProperty(el, name, {
-    get () {
-      return this.__wcChildContext
-    },
-    set (value) {
-      updateChildContext(this, value)
-    }
-  })
-}
-
 function addChildContext (el, name) {
   const observerMap = el.__wcContextObserverMap || (el.__wcContextObserverMap = {})
   const observers = observerMap[name] || (observerMap[name] = [])
@@ -131,4 +110,4 @@ function notifyContextChange (el, name, value) {
   }
 }
 
-export {defineContextProp, defineChildContextProp, addChildContext, updateChildContext, observeContext, unobserveContext, notifyContextChange}
+export {addChildContext, updateChildContext, observeContext, unobserveContext, notifyContextChange}
