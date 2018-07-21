@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { defineContextProp, addChildContext, removeChildContext, observeContext, updateContext, defineChildContextProp } from '../src/core'
+import { defineContextProp, addChildContext, removeChildContext, observeContext, notifyContextChange, defineChildContextProp } from '../src/core'
 
 describe('context', () => {
   let rootEl
@@ -169,14 +169,14 @@ describe('context', () => {
 
       test('should notify the observer when context is updated', () => {
         callback.mockClear()
-        updateContext(grandfatherEl, 'key', 'value2')
+        notifyContextChange(grandfatherEl, 'key', 'value2')
         expect(callback).toHaveBeenCalledTimes(1)
         expect(callback).toHaveBeenCalledWith('key', 'value', 'value2')
       })
 
       test('should not notify the observer when context is updated with same value', () => {
         callback.mockClear()
-        updateContext(grandfatherEl, 'key', 'value')
+        notifyContextChange(grandfatherEl, 'key', 'value')
         expect(callback).not.toHaveBeenCalled()
       })
     })
