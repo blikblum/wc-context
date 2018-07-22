@@ -28,6 +28,7 @@ function build (input, outputName) {
 }
 
 build('index.js', 'wc-context')
+build('skatejs.js', 'skatejs')
 
 // Copy package.json and LICENSE.txt
 promise = promise.then(() => {
