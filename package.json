@@ -13,8 +13,8 @@
     "custom-element",
     "context"
   ],
-  "main": "dist/wc-context.js",
-  "module": "dist/wc-context.js",
+  "main": "wc-context.js",
+  "module": "wc-context.js",
   "jest": {
     "modulePathIgnorePatterns": [
       "<rootDir>/dist/"
