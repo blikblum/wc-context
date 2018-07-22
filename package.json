@@ -1,6 +1,7 @@
 {
+  "private": true,
   "name": "wc-context",
-  "version": "0.5.4",
+  "version": "0.6.1",
   "description": "Simple context for HTML custom elements",
   "repository": "blikblum/wc-context",
   "author": "Luiz Américo Pereira Câmara",
