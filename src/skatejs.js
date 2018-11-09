@@ -1,5 +1,5 @@
 
-import { observeContext, unobserveContext, addChildContext, updateChildContext } from './core'
+import { observeContext, unobserveContext, addChildContext, updateChildContext, notifyContextChange } from './core'
 
 class PropMapper {
   constructor (property) {
@@ -82,18 +82,15 @@ const withContext = (Base) => {
     }
 
     updating (prevProps, prevState) {
-      super.updating && super.updating(prevProps, prevState)      
-      let changed
+      super.updating && super.updating(prevProps, prevState)            
       Object.keys(this.__wcMappedProps).forEach(contextKey => {
         const mapper = this.__wcMappedProps[contextKey]
         if (mapper.propertyChanged(this, prevProps, prevState)) {
-          changed = changed || {}
-          changed[contextKey] = mapper.getValue(this)
+          const value = mapper.getValue(this)
+          notifyContextChange(this, contextKey, value)
+          this.__wcChildContext[contextKey] = value
         }
       })
-      if (changed) {
-        updateChildContext(this, changed)
-      }
     }
   }
 }
