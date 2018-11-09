@@ -1,0 +1,26 @@
+{
+  "name": "wc-context-provider-inside-shadow-dom",
+  "version": "1.0.0",
+  "description": "wc-context skatejs demo (provider in shadow dom)",
+  "keywords": [],
+  "main": "index.html",
+  "scripts": {
+    "build": "webpack --mode development --module-bind js=babel-loader --plugin html-webpack-plugin --devtool source-map"
+  },
+  "dependencies": {
+    "@skatejs/renderer-lit-html": "0.2.0",
+    "lit-html": "0.10.2",
+    "skatejs": "5.2.1",
+    "wc-context": "0.6.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.5",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/preset-env": "^7.1.5",
+    "babel-loader": "^8.0.4",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2"
+  }
+}
