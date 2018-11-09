@@ -1,5 +1,5 @@
 
-import { observeContext, unobserveContext, addChildContext, updateChildContext } from './core'
+import { observeContext, unobserveContext, addChildContext, updateChildContext, notifyContextChange } from './core'
 
 class PropMapper {
   constructor (property) {
@@ -59,17 +59,16 @@ const withContext = (Base) => {
       }
     }
 
-    _shouldPropertyChange(property, value, old) {
-      const shouldChange = super._shouldPropertyChange(property, value, old)
-      if (shouldChange) {
-        Object.keys(this.__wcMappedProps).some(contextKey => {
-          const mapper = this.__wcMappedProps[contextKey]
-          if (mapper.property === property) {
-            updateChildContext(this, {[contextKey]: value})
-            return true
-          }
-        })
-      }
+    shouldUpdate(changedProperties) {
+      const shouldChange = super.shouldUpdate(changedProperties)      
+      Object.keys(this.__wcMappedProps).forEach(contextKey => {
+        const mapper = this.__wcMappedProps[contextKey]
+        if (changedProperties.has(mapper.property)) {
+          const value = this[mapper.property]
+          notifyContextChange(this, contextKey, value)
+          this.__wcChildContext[contextKey] = value
+        }
+      })
       return shouldChange
     }
   }
