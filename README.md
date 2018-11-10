@@ -6,7 +6,7 @@
 ### Features
 
 &nbsp; &nbsp; ✓ Small and fast<br>
-&nbsp; &nbsp; ✓ Integrates with lit-element or skatejs<br>
+&nbsp; &nbsp; ✓ Integrates with lit-element and skatejs<br>
 
 
 ### Usage
@@ -14,6 +14,12 @@
 > Warning: the interface may change in future
 
 The simplest way to use `wc-context` is through the `withContext` class mixin 
+
+Live examples: 
+* lit-element: [version 1](https://codesandbox.io/s/8n89qz95q2) /
+ [version 2](https://codesandbox.io/s/wq6jyo3jvw)
+* skatejs: [version 1](https://codesandbox.io/s/xj1k8x936w) / 
+ [version 2](https://codesandbox.io/s/82q46lo3x8)
 
 #### Publishes a context
 
@@ -107,7 +113,7 @@ class Provider extends  {
   constructor () {
     super()
     this.childContext = {
-      theme: fromStateProp('value')
+      theme: fromStateProp('value'),
       altTheme: fromProp('altTheme')
     }
     this.state = {value: 'blue'}
