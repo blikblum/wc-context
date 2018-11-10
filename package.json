@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "wc-context",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Simple context for HTML custom elements",
   "repository": "blikblum/wc-context",
   "author": "Luiz Américo Pereira Câmara",
@@ -12,7 +12,9 @@
   "keywords": [
     "webcomponent",
     "custom-element",
-    "context"
+    "context",
+    "lit-element",
+    "skatejs"
   ],
   "main": "wc-context.js",
   "module": "wc-context.js",
