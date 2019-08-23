@@ -20,20 +20,21 @@
   "module": "wc-context.js",
   "jest": {
     "modulePathIgnorePatterns": [
-      "<rootDir>/dist/"
+      "<rootDir>/dist/",
+      "<rootDir>/examples/"
     ]
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-jest": "^23.4.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-env": "^1.7.0",
-    "del": "^3.0.0",
-    "jest": "^23.4.1",
-    "rollup": "^0.62.0",
-    "rollup-plugin-babel": "^3.0.7",
-    "standard": "^11.0.1"
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/preset-env": "^7.0.0",
+    "babel-jest": "^24.9.0",
+    "del": "^5.0.0",
+    "jest": "^24.9.0",
+    "rollup": "^1.20.1",
+    "rollup-plugin-babel": "^4.3.3",
+    "standard": "^14.0.2"
   },
   "scripts": {
     "lint": "standard src test tools",
