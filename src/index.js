@@ -27,10 +27,14 @@ const withContext = (Base) => {
       }
 
       if (!this.__wcChildContextInitialized) {
-        const childContext = this.childContext
-        Object.keys(childContext).forEach(key => {
-          addChildContext(this, key)
-        })
+        const providedContexts = this.constructor.providedContexts
+        if (providedContexts) {
+          Object.keys(providedContexts).forEach(name => {
+            const contextInfo = providedContexts[name]
+            this.__wcChildContext[name] = contextInfo.property ? this[contextInfo.property] : contextInfo.value
+            addChildContext(this, name)
+          })
+        }
         this.__wcChildContextInitialized = true
       }
     }

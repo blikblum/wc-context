@@ -4,16 +4,16 @@ import { withContext } from '../src/index'
 const Component = withContext(HTMLElement)
 
 const ProviderComponent = class extends Component {
-  constructor() {
-    super()
-    this.childContext = {
-      key: 'value'
-    }
-  }  
+  static providedContexts = {
+    valueContext: { value: 'value' },
+    propertyContext: { property: 'myProp' }
+  }
+
+  myProp = 'test'
 }
 
 const ConsumerComponent = class extends Component {
-  static observedContexts = ['key']
+  static observedContexts = ['valueContext', 'propertyContext']
 }
 
 customElements.define('mixin-component', Component)
@@ -46,7 +46,7 @@ describe('withContext', () => {
     expect(el.context).toBeDefined()
   })
 
-  describe('with childContext static property', () => {
+  describe('with providedContexts static property', () => {
     let el    
 
     beforeEach(() => {
@@ -55,11 +55,12 @@ describe('withContext', () => {
       rootEl.appendChild(el)
     })
 
-    test('should provide context to child element', async () => {
+    test('should provide contexts to child element', async () => {
       const childEl = new ConsumerComponent()
       parentEl.appendChild(childEl)
       await Promise.resolve()
-      expect(childEl.context.key).toBe('value')       
+      expect(childEl.context.valueContext).toBe('value')
+      expect(childEl.context.propertyContext).toBe('test')       
     })
   })
 })
