@@ -31,7 +31,8 @@ const withContext = (Base) => {
         if (providedContexts) {
           Object.keys(providedContexts).forEach(name => {
             const contextInfo = providedContexts[name]
-            this.__wcChildContext[name] = contextInfo.property ? this[contextInfo.property] : contextInfo.value
+            const property = typeof contextInfo === 'string' ? contextInfo : contextInfo.property
+            this.__wcChildContext[name] = property ? this[property] : contextInfo.value
             addChildContext(this, name)
           })
         }

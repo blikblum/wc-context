@@ -6,14 +6,16 @@ const Component = withContext(HTMLElement)
 const ProviderComponent = class extends Component {
   static providedContexts = {
     valueContext: { value: 'value' },
-    propertyContext: { property: 'myProp' }
+    propertyContext: { property: 'myProp' },
+    shorthandContext: 'myOtherProp'
   }
 
   myProp = 'test'
+  myOtherProp = 'xxx'
 }
 
 const ConsumerComponent = class extends Component {
-  static observedContexts = ['valueContext', 'propertyContext']
+  static observedContexts = ['valueContext', 'propertyContext', 'shorthandContext']
 }
 
 customElements.define('mixin-component', Component)
@@ -60,7 +62,8 @@ describe('withContext', () => {
       parentEl.appendChild(childEl)
       await Promise.resolve()
       expect(childEl.context.valueContext).toBe('value')
-      expect(childEl.context.propertyContext).toBe('test')       
+      expect(childEl.context.propertyContext).toBe('test')
+      expect(childEl.context.shorthandContext).toBe('xxx')       
     })
   })
 })
