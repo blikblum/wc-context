@@ -3,8 +3,7 @@ import { observeContext, unobserveContext, addChildContext } from './core'
 
 const withContext = (Base) => {
   return class extends Base {    
-    __wcContext = {}
-    __wcChildContext = {}
+    __wcContext = {}    
     __wcChildContextInitialized = false
 
     get context () {
@@ -21,11 +20,12 @@ const withContext = (Base) => {
       if (!this.__wcChildContextInitialized) {
         const providedContexts = this.constructor.providedContexts
         if (providedContexts) {
+          const instanceContexts = this.__wcProvidedContexts || (this.__wcProvidedContexts = {})
           Object.keys(providedContexts).forEach(name => {
             const contextInfo = providedContexts[name]
             const property = typeof contextInfo === 'string' ? contextInfo : contextInfo.property
-            this.__wcChildContext[name] = property ? this[property] : contextInfo.value
-            addChildContext(this, name)
+            instanceContexts[name] = property ? this[property] : contextInfo.value
+            addChildContext(this, name, instanceContexts)
           })
         }
         this.__wcChildContextInitialized = true
