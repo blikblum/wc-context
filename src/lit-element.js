@@ -1,33 +1,13 @@
 
-import { observeContext, unobserveContext, addChildContext, updateChildContext, notifyContextChange } from './core'
+import { observeContext, unobserveContext, registerProvidedContext, notifyContextChange } from './core'
 
-class PropMapper {
-  constructor (property) {
-    this.property = property    
-  }
-}
-
-function fromProp (property) {
-  return new PropMapper(property)
-}
+const initializedElements = new WeakSet()
 
 const withContext = (Base) => {
   return class extends Base {    
-    __wcContext = {}
-    __wcChildContext = {}
-    __wcChildContextInitialized = false
-    __wcMappedProps = {}
 
     get context () {
-      return this.__wcContext
-    }
-
-    get childContext () {
-      return this.__wcChildContext
-    }
-
-    set childContext (value) {
-      updateChildContext(this, value)
+      return this.__wcContext || (this.__wcContext = {})
     }
 
     connectedCallback () {
@@ -37,17 +17,22 @@ const withContext = (Base) => {
         observedContexts.forEach(context => observeContext(this, context))
       }
 
-      if (!this.__wcChildContextInitialized) {
-        const childContext = this.childContext        
-        Object.keys(childContext).forEach(key => {
-          const value = childContext[key]          
-          if (value instanceof PropMapper) {            
-            this.__wcMappedProps[key] = value
-            childContext[key] = this[value.property]
-          }          
-          addChildContext(this, key)
-        })
-        this.__wcChildContextInitialized = true
+      if (!initializedElements.has(this)) {
+        const providedContextConfigs = this.constructor.providedContexts
+        if (providedContextConfigs) {
+          const providedContexts = this.__wcProvidedContexts || (this.__wcProvidedContexts = {})
+          const mappedProps = this.__wcMappedProps || (this.__wcMappedProps = {})
+          Object.keys(providedContextConfigs).forEach(name => {
+            const config = providedContextConfigs[name]
+            const property = typeof config === 'string' ? config : config.property
+            providedContexts[name] = property ? this[property] : config.value
+            if (property) {
+              mappedProps[name] = property
+            }
+            registerProvidedContext(this, name, providedContexts)
+          })
+        }
+        initializedElements.add(this)
       }
     }
 
@@ -60,18 +45,22 @@ const withContext = (Base) => {
     }
 
     shouldUpdate(changedProperties) {
-      const shouldChange = super.shouldUpdate(changedProperties)      
-      Object.keys(this.__wcMappedProps).forEach(contextKey => {
-        const mapper = this.__wcMappedProps[contextKey]
-        if (changedProperties.has(mapper.property)) {
-          const value = this[mapper.property]
-          notifyContextChange(this, contextKey, value)
-          this.__wcChildContext[contextKey] = value
-        }
-      })
+      const shouldChange = super.shouldUpdate(changedProperties)
+      const mappedProps = this.__wcMappedProps
+      if (mappedProps) {
+        const providedContexts = this.__wcProvidedContexts || (this.__wcProvidedContexts = {})
+        Object.keys(mappedProps).forEach(contextName => {
+          const property = mappedProps[contextName]
+          if (changedProperties.has(property)) {
+            const value = this[property]
+            providedContexts[contextName] = value
+            notifyContextChange(this, contextName, value)            
+          }
+        })        
+      }      
       return shouldChange
     }
   }
 }
 
-export { withContext, fromProp }
+export { withContext }
