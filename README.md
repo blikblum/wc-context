@@ -27,17 +27,14 @@ Live examples:
 import { withContext } from 'wc-context'
 
 class Provider extends withContext(HTMLElement) {
-  constructor () {
-    super()
-    this.childContext = {
-      theme: 'blue'
+  static get providedContexts () {
+    return {
+      theme: { value: 'blue' }
     }
-  }
+  }  
   
   toggleTheme () {
-    this.childContext = {
-      theme: 'newtheme'
-    }
+    this.updateProvidedContext('theme', 'newtheme')    
   }
 }
 ```
@@ -132,18 +129,20 @@ class Provider extends  {
 `wc-context` also exports its low level functions that can be used to handle specific cases or create a new interface
 
 ```javascript
-import  { addChildContext, notifyContextChange } from 'wc-context/core'
+import  { registerProvidedContext, notifyContextChange } from 'wc-context/core'
 
 // custom element that publishes an arbitrary context key and value
-class DynamicProvider extends HTMLElement {
+class ContextProvider extends HTMLElement {
   connnectedCallback () {
-    this.__wcChildContext[this.key] = this.value    
-    addChildContext(this, this.key)
+    const providedContexts = this.__providedContexts || (this.__providedContexts = {})
+    providedContexts[this.key] = this.value    
+    registerProvidedContext(this, this.key, providedContexts)
   }
   
   set value (val) {
+    const providedContexts = this.__providedContexts || (this.__providedContexts = {})
+    providedContexts[this.key] = val
     this.__value = val
-    this.__wcChildContext[this.key] = val
     notifyContextChange(this, this.key, val)
   }
 
@@ -152,14 +151,14 @@ class DynamicProvider extends HTMLElement {
   }
 }
 
-customElements.define('context-provider', DynamicProvider)
+customElements.define('context-provider', ContextProvider)
 
 // later
 import { html } from 'lit-html'
 let theme = 'blue' 
 html`<context-provider .key="theme" .value=${theme}>
    <div>
-     <my-theme-consumer/>
+     <my-theme-consumer></my-theme-consumer>
    </div>
 </context-provider>`
 ```
