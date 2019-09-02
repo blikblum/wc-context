@@ -49,14 +49,14 @@ function sendContextEvent (el, name) {
   return event
 }
 
-function addChildContext (el, name, contexts) {
+function registerProvidedContext (el, name, providedContexts) {
   const observerMap = el.__wcContextObserverMap || (el.__wcContextObserverMap = {})
   const observers = observerMap[name] || (observerMap[name] = [])
   const orphans = orphanMap[name]
   el.addEventListener(`context-request-${name}`, (event) => {
     event.stopPropagation()
     const targetEl = event.target
-    const value = contexts[name]
+    const value = providedContexts[name]
     const context = targetEl.context
     const oldValue = context[name]
     if (oldValue !== value) {
@@ -101,4 +101,4 @@ function notifyContextChange (el, name, value) {
   }
 }
 
-export {addChildContext, observeContext, unobserveContext, notifyContextChange}
+export {registerProvidedContext, observeContext, unobserveContext, notifyContextChange}

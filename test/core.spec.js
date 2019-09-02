@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import {addChildContext, observeContext, notifyContextChange} from '../src/core'
+import {registerProvidedContext, observeContext, notifyContextChange} from '../src/core'
 
 function defineContextProp (el, name) {
   el.__wcContext = {}
@@ -47,7 +47,7 @@ describe('context', () => {
 
   describe('when added to a node', () => {
     beforeEach(() => {            
-      addChildContext(grandfatherEl, 'key', {key: 'value'})
+      registerProvidedContext(grandfatherEl, 'key', {key: 'value'})
     })
 
     test('should be acessible in all children nodes', () => {
@@ -95,7 +95,7 @@ describe('context', () => {
 
     describe('and when added to a child node', () => {
       beforeEach(() => {        
-        addChildContext(parentEl, 'key', {key: 'value2'})
+        registerProvidedContext(parentEl, 'key', {key: 'value2'})
       })
 
       test('should override parent context', () => {
@@ -107,7 +107,7 @@ describe('context', () => {
 
     describe('and when added to a child node with different key', () => {
       beforeEach(() => {
-        addChildContext(parentEl, 'key2', {key2: 'value2'})
+        registerProvidedContext(parentEl, 'key2', {key2: 'value2'})
       })
 
       test('should not override parent context', () => {
@@ -119,7 +119,7 @@ describe('context', () => {
 
     describe('and when added to a sibling node', () => {
       beforeEach(() => {        
-        addChildContext(grandfather2El, 'key', {key: 'value2'})
+        registerProvidedContext(grandfather2El, 'key', {key: 'value2'})
       })
 
       test('should keep independent values', () => {
@@ -169,7 +169,7 @@ describe('context', () => {
 
       defineContextProp(parentEl, 'context')
       observeContext(parentEl, 'key')      
-      addChildContext(grandfatherEl, 'key', {key: 'value'})
+      registerProvidedContext(grandfatherEl, 'key', {key: 'value'})
     })
 
     test('should notify the observer', () => {

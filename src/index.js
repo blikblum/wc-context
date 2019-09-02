@@ -1,5 +1,5 @@
 
-import { observeContext, unobserveContext, addChildContext, notifyContextChange } from './core'
+import { observeContext, unobserveContext, registerProvidedContext, notifyContextChange } from './core'
 
 const initializedElements = new WeakSet()
 
@@ -31,7 +31,7 @@ const withContext = (Base) => {
             const config = providedContextConfigs[name]
             const property = typeof config === 'string' ? config : config.property
             providedContexts[name] = property ? this[property] : config.value
-            addChildContext(this, name, providedContexts)
+            registerProvidedContext(this, name, providedContexts)
           })
         }
         initializedElements.add(this)
