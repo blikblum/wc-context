@@ -1,10 +1,11 @@
 
 import { observeContext, unobserveContext, addChildContext } from './core'
 
+const initializedElements = new WeakSet()
+
 const withContext = (Base) => {
   return class extends Base {    
-    __wcContext = {}    
-    __wcChildContextInitialized = false
+    __wcContext = {}        
 
     get context () {
       return this.__wcContext
@@ -17,7 +18,7 @@ const withContext = (Base) => {
         observedContexts.forEach(context => observeContext(this, context))
       }
 
-      if (!this.__wcChildContextInitialized) {
+      if (!initializedElements.has(this)) {
         const providedContexts = this.constructor.providedContexts
         if (providedContexts) {
           const instanceContexts = this.__wcProvidedContexts || (this.__wcProvidedContexts = {})
@@ -28,7 +29,7 @@ const withContext = (Base) => {
             addChildContext(this, name, instanceContexts)
           })
         }
-        this.__wcChildContextInitialized = true
+        initializedElements.add(this)
       }
     }
 
