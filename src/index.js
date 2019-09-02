@@ -1,5 +1,5 @@
 
-import { observeContext, unobserveContext, addChildContext, updateChildContext } from './core'
+import { observeContext, unobserveContext, addChildContext } from './core'
 
 const withContext = (Base) => {
   return class extends Base {    
@@ -9,14 +9,6 @@ const withContext = (Base) => {
 
     get context () {
       return this.__wcContext
-    }
-
-    get childContext () {
-      return this.__wcChildContext
-    }
-
-    set childContext (value) {
-      updateChildContext(this, value)
     }
 
     connectedCallback () {
