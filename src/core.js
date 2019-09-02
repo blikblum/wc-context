@@ -73,17 +73,6 @@ function addChildContext (el, name, contexts) {
   }
 }
 
-function updateChildContext (el, value) {
-  const childContext = el.__wcChildContext
-  Object.keys(value).forEach(propName => {
-    const propValue = value[propName]
-    if (childContext[propName] !== propValue) {
-      notifyContextChange(el, propName, propValue)
-    }
-    childContext[propName] = propValue
-  })
-}
-
 function observeContext (el, name) {
   const event = sendContextEvent(el, name)
   if (!event.detail.handled) {
@@ -112,4 +101,4 @@ function notifyContextChange (el, name, value) {
   }
 }
 
-export {addChildContext, updateChildContext, observeContext, unobserveContext, notifyContextChange}
+export {addChildContext, observeContext, unobserveContext, notifyContextChange}
