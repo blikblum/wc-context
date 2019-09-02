@@ -1,5 +1,5 @@
 
-import { observeContext, unobserveContext, addChildContext } from './core'
+import { observeContext, unobserveContext, addChildContext, notifyContextChange } from './core'
 
 const initializedElements = new WeakSet()
 
@@ -10,6 +10,12 @@ const withContext = (Base) => {
       return this.__wcContext || (this.__wcContext = {})
     }
 
+    updateProvidedContext (name, value) {
+      const providedContexts = this.__wcProvidedContexts || (this.__wcProvidedContexts = {})
+      providedContexts[name] = value
+      notifyContextChange(this, name, value)
+    }
+
     connectedCallback () {
       super.connectedCallback && super.connectedCallback()
       const observedContexts = this.constructor.observedContexts
@@ -18,14 +24,14 @@ const withContext = (Base) => {
       }
 
       if (!initializedElements.has(this)) {
-        const providedContexts = this.constructor.providedContexts
-        if (providedContexts) {
-          const instanceContexts = this.__wcProvidedContexts || (this.__wcProvidedContexts = {})
-          Object.keys(providedContexts).forEach(name => {
-            const contextInfo = providedContexts[name]
-            const property = typeof contextInfo === 'string' ? contextInfo : contextInfo.property
-            instanceContexts[name] = property ? this[property] : contextInfo.value
-            addChildContext(this, name, instanceContexts)
+        const providedContextConfigs = this.constructor.providedContexts
+        if (providedContextConfigs) {
+          const providedContexts = this.__wcProvidedContexts || (this.__wcProvidedContexts = {})
+          Object.keys(providedContextConfigs).forEach(name => {
+            const config = providedContextConfigs[name]
+            const property = typeof config === 'string' ? config : config.property
+            providedContexts[name] = property ? this[property] : config.value
+            addChildContext(this, name, providedContexts)
           })
         }
         initializedElements.add(this)
