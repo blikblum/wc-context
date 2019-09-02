@@ -57,9 +57,10 @@ function addChildContext (el, name, contexts) {
     event.stopPropagation()
     const targetEl = event.target
     const value = contexts[name]
-    const oldValue = targetEl.__wcContext[name]
+    const context = targetEl.context
+    const oldValue = context[name]
     if (oldValue !== value) {
-      targetEl.__wcContext[name] = value
+      context[name] = value
       if (targetEl.contextChangedCallback) {
         targetEl.contextChangedCallback(name, oldValue, value)
       }
@@ -99,9 +100,10 @@ function notifyContextChange (el, name, value) {
   const observers = observerMap && observerMap[name]
   if (observers) {
     observers.forEach(observer => {
-      const oldValue = observer.__wcContext[name]
+      const context = observer.context
+      const oldValue = context[name]
       if (oldValue !== value) {
-        observer.__wcContext[name] = value
+        context[name] = value
         if (observer.contextChangedCallback) {
           observer.contextChangedCallback(name, oldValue, value)
         }

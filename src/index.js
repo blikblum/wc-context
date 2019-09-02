@@ -4,11 +4,10 @@ import { observeContext, unobserveContext, addChildContext } from './core'
 const initializedElements = new WeakSet()
 
 const withContext = (Base) => {
-  return class extends Base {    
-    __wcContext = {}        
+  return class extends Base {
 
     get context () {
-      return this.__wcContext
+      return this.__wcContext || (this.__wcContext = {})
     }
 
     connectedCallback () {
