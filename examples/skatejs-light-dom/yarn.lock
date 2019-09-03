@@ -602,10 +602,17 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@skatejs/renderer-lit-html@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@skatejs/renderer-lit-html/-/renderer-lit-html-0.2.0.tgz#3cdf51c0574faece41b06b7ba88618cfaaa67282"
-  integrity sha512-4HDCqTO6xCZr2GnKnJq9MpjQIQPOxtfbLdfx4QSsrQHhB+E6hLeo26XaW5Ovjja7qM26/H8uVoRIT712vfFkiw==
+"@skatejs/element-lit-html@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@skatejs/element-lit-html/-/element-lit-html-0.0.1.tgz#1624a51030169864976e3b18ded06a5ede773b80"
+  integrity sha512-rrrhYagsrKXLHt5Oq4M37HycTKLYOYr+MqrBfHZDZDsXcsVPYno3muE+Yi2LzNjXOelJLS/CV+BsPrheyLkfYg==
+  dependencies:
+    "@skatejs/element" "^0.0.0"
+
+"@skatejs/element@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@skatejs/element/-/element-0.0.0.tgz#07010b71cc37788baeddd41211418d361e476fa2"
+  integrity sha512-bZFtJ/W3HuC3p15coRBbdyXI2/qEO6TyiBSepGWrGChKSxSvq9POfTolHjYDo/pNK9ENZbUXifgYCbnwvVrCfg==
 
 "@webassemblyjs/ast@1.7.11":
   version "1.7.11"
@@ -749,6 +756,11 @@
     "@webassemblyjs/ast" "1.7.11"
     "@webassemblyjs/wast-parser" "1.7.11"
     "@xtuc/long" "4.2.1"
+
+"@webcomponents/webcomponentsjs@^2.2.10":
+  version "2.2.10"
+  resolved "https://registry.yarnpkg.com/@webcomponents/webcomponentsjs/-/webcomponentsjs-2.2.10.tgz#6f6bee0277833ae98d7e5b46f1e0fdb48cd5ff44"
+  integrity sha512-5dzhUhP+h0qMiK0IWb7VNb0OGBoXO3AuI6Qi8t9PoKT50s5L1jv0xnwnLq+cFgPuTB8FLTNP8xIDmyoOsKBy9Q==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
@@ -2313,10 +2325,10 @@ lcid@^2.0.0:
   dependencies:
     invert-kv "^2.0.0"
 
-lit-html@0.10.2:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-0.10.2.tgz#53c846afcf91bb1e6623179ef22e327ab8ac0e0e"
-  integrity sha512-ue0pIX3Fj5gUsNSozdRQIb1MAgNqFQsHgvHE/FU34xyu9NN/af3EISr7Bb+vP9YeLXIA4vLLOoYp2Z22dVYhww==
+lit-html@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-1.1.2.tgz#2e3560a7075210243649c888ad738eaf0daa8374"
+  integrity sha512-FFlUMKHKi+qG1x1iHNZ1hrtc/zHmfYTyrSvs3/wBTvaNtpZjOZGWzU7efGYVpgp6KvWeKF6ql9/KsCq6Z/mEDA==
 
 loader-runner@^2.3.0:
   version "2.3.1"
@@ -3346,11 +3358,6 @@ signal-exit@^3.0.0:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
-skatejs@5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/skatejs/-/skatejs-5.2.1.tgz#d53095b31a81e9654c1ed6a79b03f89b74235e26"
-  integrity sha512-PlVnGqQOF4bHdTsLheaRjmssYv6UrKA8Olj+FAv5q/yr8gTsNVxpyAWl6XopePIVucUbIKP+9OTxfBXV9qEcKg==
-
 snapdragon-node@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/snapdragon-node/-/snapdragon-node-2.1.1.tgz#6c175f86ff14bdb0724563e8f3c1b021a286853b"
@@ -3792,10 +3799,10 @@ watchpack@^1.5.0:
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
 
-wc-context@0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/wc-context/-/wc-context-0.6.1.tgz#dfefca1d18b3930fe6942a6033b0de22fef072cc"
-  integrity sha512-GogLzE6yHtvpPtpXbBap0dTkMuqOxIINrTJ7YLK3R9NCfiBxVdfovuiWm2HJa1+GRlD/WcyJfqUbhF5hmv8QUg==
+wc-context@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/wc-context/-/wc-context-0.8.0.tgz#4d6fd081a3fd6bdf7a732a1c6aa5a4ea2ee92100"
+  integrity sha512-xofyQqTdfW6yBNPVRBJjj2Fp4a0zj62o7knQOTYFp7y97ie6Z9SRtOMKy7VbQLeoRgLHJ72nS4W/hjleLnrg7Q==
 
 webpack-cli@^3.1.2:
   version "3.1.2"

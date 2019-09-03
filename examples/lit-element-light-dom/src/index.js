@@ -1,5 +1,4 @@
-import { fromProp } from 'wc-context/lit-element'
-import { html } from '@polymer/lit-element'
+import { html } from 'lit-element'
 import { styles } from './styles'
 import { Component } from './component'
 
@@ -12,18 +11,17 @@ class ThemeProvider extends Component {
     }
   }
 
-  constructor () {
-    super()
-    this.childContext = {
-      theme: fromProp('activeTheme')
+  static get providedContexts () {
+    return {
+      theme: { property: 'activeTheme' }
     }
+  }
 
-    this.toggleTheme = () => {
-      const primaryTheme = this.theme || 'light'
-      const altTheme = this.alttheme || 'dark'
-      this.activeTheme =
-        this.activeTheme === primaryTheme ? altTheme : primaryTheme
-    }
+  toggleTheme () {      
+    const primaryTheme = this.theme || 'light'
+    const altTheme = this.alttheme || 'dark'
+    this.activeTheme =
+      this.activeTheme === primaryTheme ? altTheme : primaryTheme    
   }
 
   connectedCallback () {
@@ -34,7 +32,7 @@ class ThemeProvider extends Component {
   render () {
     return html`
       <button @click=${this.toggleTheme}>toggle theme</button>
-      <slot/>
+      <slot></slot>
     `
   }
 }
@@ -66,15 +64,14 @@ class TitleProvider extends Component {
     }
   }
 
-  constructor () {
-    super()
-    this.childContext = {
-      title: fromProp('value')
+  static get providedContexts () {
+    return {
+      title: { property: 'value' }
     }
-  }
-
+  }  
+  
   render () {
-    return html`<slot/>`
+    return html`<slot></slot>`
   }
 }
 

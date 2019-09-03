@@ -8,10 +8,10 @@
     "build": "webpack --mode development --module-bind js=babel-loader --plugin html-webpack-plugin --devtool source-map"
   },
   "dependencies": {
-    "@skatejs/renderer-lit-html": "0.2.0",
-    "lit-html": "0.10.2",
-    "skatejs": "5.2.1",
-    "wc-context": "0.6.1"
+    "@skatejs/element-lit-html": "^0.0.1",
+    "@webcomponents/webcomponentsjs": "^2.2.10",
+    "lit-html": "1.1.2",
+    "wc-context": "0.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.5",

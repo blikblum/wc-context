@@ -1,36 +1,34 @@
-import { fromProp, fromStateProp } from 'wc-context/skatejs';
-import { html } from 'lit-html/lib/lit-extended.js';
+import { html } from 'lit-html';
 import { styles } from './styles';
 import { Component } from './component';
 
 class ThemeProvider extends Component {
   static props = {
     theme: String,
-    alttheme: String
+    alttheme: String,
+    activeTheme: String
   };
 
-  childContext = {
-    theme: fromStateProp('theme')
+  static providedContexts = {
+    theme: { property: 'activeTheme' }
   };
 
   toggleTheme = () => {
     const primaryTheme = this.theme || 'light';
     const altTheme = this.alttheme || 'dark';
-    this.state = {
-      ...this.state,
-      theme: this.state.theme === primaryTheme ? altTheme : primaryTheme
-    };
+    this.activeTheme =
+      this.activeTheme === primaryTheme ? altTheme : primaryTheme;
   };
 
   connectedCallback() {
-    super.connectedCallback();
-    this.state = { theme: this.theme || 'light' };
+    this.activeTheme = this.theme || 'light';
+    super.connectedCallback();    
   }
 
   render() {
     return html`
-      <button on-click=${this.toggleTheme}>toggle theme</button>
-      <slot/>
+      <button @click=${this.toggleTheme}>toggle theme</button>
+      <slot></slot>
     `;
   }
 }
@@ -45,7 +43,7 @@ class ThemeConsumer extends Component {
       this.constructor.name,
       `context "${name}" changed from "${oldValue}" to "${value}"`
     );
-    this.triggerUpdate();
+    this.forceUpdate();
   }
 
   render() {
@@ -60,12 +58,12 @@ class TitleProvider extends Component {
     value: String
   };
 
-  childContext = {
-    title: fromProp('value')
+  static providedContexts = {
+    title: { property: 'value' }
   };
 
   render() {
-    return html`<slot/>`;
+    return html`<slot></slot>`;
   }
 }
 
@@ -79,19 +77,24 @@ class TitleThemeConsumer extends Component {
       this.constructor.name,
       `context "${name}" changed from "${oldValue}" to "${value}"`
     );
-    this.triggerUpdate();
+    this.forceUpdate();
   }
 
   render() {
     return html`
     <div>${this.context.title}</div>
-    <div style$=${styles[this.context.theme]}>${this.context.theme}</div>
+    <div style=${styles[this.context.theme]}>${this.context.theme}</div>
     `;
   }
 }
 
 class App extends Component {
+  static props = {
+    state: Object
+  }
+
   state = { title: 'one title' };
+
   toggleTitle = () => {
     this.state = {
       ...this.state,
@@ -100,6 +103,7 @@ class App extends Component {
       }
     };
   };
+
   render() {
     return html`
       <div>
@@ -112,11 +116,11 @@ class App extends Component {
           </theme-provider>
         </theme-provider>
         <theme-provider>
-          <title-provider value$=${this.state.title}>
+          <title-provider .value=${this.state.title}>
             <titletheme-consumer></titletheme-consumer>
           </title-provider>
         </theme-provider>        
-        <button on-click=${this.toggleTitle}>Toggle title</button>
+        <button @click=${this.toggleTitle}>Toggle title</button>
       </div>
     `;
   }
