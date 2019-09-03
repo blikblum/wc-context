@@ -5,15 +5,18 @@
 
 ### Features
 
-&nbsp; &nbsp; ✓ Small and fast<br>
+&nbsp; &nbsp; ✓ Small, fast and flexible<br>
+&nbsp; &nbsp; ✓ No need to dedicated "provider" or "consumer" elements<br>
+&nbsp; &nbsp; ✓ Ability to provide one or more contexts per element<br>
 &nbsp; &nbsp; ✓ Integrates with lit-element and skatejs<br>
+&nbsp; &nbsp; ✓ No Internet Explorer support<br>
 
 
 ### Usage
 
-> Warning: the interface may change in future
+> Warning: the public interface may change in future
 
-The simplest way to use `wc-context` is through the `withContext` class mixin 
+The simplest way to use `wc-context` is through the `withContext` class mixin
 
 Live examples: 
 * lit-element: [version 1](https://codesandbox.io/s/8n89qz95q2) /
@@ -69,21 +72,21 @@ Along side the generic class mixin, `wc-context` provides specialized mixins tha
 
 ```javascript
 // @polymer/lit-element
-import { withContext, fromProp } from 'wc-context/lit-element'
-import { LitElement } from '@polymer/lit-element'
+import { withContext } from 'wc-context/lit-element'
+import { LitElement } from 'lit-element'
 
 const Component = withContext(LitElement)
 
-class Provider extends  {
+class Provider extends Component {
   static get properties () {
     return {
       value: {type: String}
     }
   }
-  constructor () {
-    super()
-    this.childContext = {
-      theme: fromProp('value')
+
+  static get providedContexts () {
+    return {
+      theme: {property: 'value'}
     }
   }
   
@@ -95,30 +98,34 @@ class Provider extends  {
 
 ```javascript
 // skatejs
-import withLit from '@skatejs/renderer-lit-html/dist/esnext'
-import { withUpdate, withRenderer } from 'skatejs/dist/esnext'
-import { withContext, fromProp, fromStateProp } from 'wc-context/skatejs'
+import Element from '@skatejs/element-lit-html'
+import { withContext } from 'wc-context/skatejs'
 
-const Component = withLit(withContext(withUpdate(withRenderer(HTMLElement))))
+const Component = withContext(Element)
 
-class Provider extends  {
+class Provider extends Component {
   static get props () {
     return {
-      altTheme: String
+      altTheme: String,
+      theme: String
     }
   }
-  constructor () {
-    super()
-    this.childContext = {
-      theme: fromStateProp('value'),
-      altTheme: fromProp('altTheme')
+
+  static get providedContexts () {
+    return {
+      theme: {property: 'theme'}
+      altTheme: {property: 'altTheme'}
     }
-    this.state = {value: 'blue'}
+  }  
+
+  constructor () {
+    super()    
+    this.theme = 'blue'
     this.altTheme = 'yellow'
   }
   
   toggleTheme () {
-    this.state = {value: 'newtheme'}
+    this.theme = 'newtheme'
     this.altTheme = 'newalttheme'
   }
 }
