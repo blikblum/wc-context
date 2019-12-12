@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { withContext } from '../src/index'
+import { withContext } from '../wc-context'
 
 const Component = withContext(HTMLElement)
 
