@@ -1,5 +1,5 @@
 
-import { observeContext, unobserveContext, registerProvidedContext, notifyContextChange } from './core'
+import { observeContext, unobserveContext, registerProvidedContext, notifyContextChange } from './core.js'
 
 const initializedElements = new WeakSet()
 
