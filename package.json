@@ -17,6 +17,12 @@
   ],
   "main": "wc-context.js",
   "module": "wc-context.js",
+  "files": [
+    "core.js",
+    "lit-element.js",
+    "skatejs.js",
+    "wc-context.js"
+  ],
   "jest": {
     "modulePathIgnorePatterns": [
       "<rootDir>/dist/",
