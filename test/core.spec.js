@@ -48,7 +48,7 @@ describe('context', () => {
     child3El = document.getElementById('child3')
   })
 
-  describe('when added to a node', () => {
+  describe('when registered in a node', () => {
     beforeEach(() => {
       registerProvidedContext(grandfatherEl, 'key', { key: 'value' })
     })
@@ -85,15 +85,13 @@ describe('context', () => {
       expect(childEl.context.key).toBe('value')
     })
 
-    test('should update childContext', () => {
-      grandfatherEl.childContext = {
-        key: 'value',
-        key2: undefined,
+    test('should allow to configure how context value is set', () => {
+      function setElProperty(el, value, arg) {
+        el[arg] = value
       }
-      expect(grandfatherEl.childContext).toMatchObject({
-        key: 'value',
-        key2: undefined,
-      })
+
+      observeContext(childEl, 'key', setElProperty, 'otherProp')
+      expect(childEl.otherProp).toBe('value')
     })
 
     describe('and when added to a child node', () => {

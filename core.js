@@ -12,8 +12,8 @@ const orphanResolveQueue = {
       resolved.then(() => {
         this.contexts.forEach((context) => {
           const orphans = orphanMap[context]
-          orphans.forEach((orphan) => {
-            const event = sendContextEvent(orphan, context)
+          orphans.forEach(({ setter, arg }, orphan) => {
+            const event = sendContextEvent(orphan, context, setter, arg)
             if (event.detail.handled) {
               orphans.delete(orphan)
             }
@@ -26,9 +26,9 @@ const orphanResolveQueue = {
   },
 }
 
-function addOrphan(el, name) {
-  const orphans = orphanMap[name] || (orphanMap[name] = new Set())
-  orphans.add(el)
+function addOrphan(el, name, setter, arg) {
+  const orphans = orphanMap[name] || (orphanMap[name] = new Map())
+  orphans.set(el, { setter, arg })
 }
 
 function removeOrphan(el, name) {
@@ -38,9 +38,9 @@ function removeOrphan(el, name) {
   }
 }
 
-function sendContextEvent(el, name) {
+function sendContextEvent(el, name, setter, arg) {
   const event = new CustomEvent(`context-request-${name}`, {
-    detail: {},
+    detail: { setter, arg },
     bubbles: true,
     cancelable: true,
     composed: true,
@@ -58,15 +58,9 @@ function registerProvidedContext(el, name, providedContexts) {
     event.stopPropagation()
     const targetEl = event.target
     const value = providedContexts[name]
-    const context = targetEl.context
-    const oldValue = context[name]
-    if (oldValue !== value) {
-      context[name] = value
-      if (targetEl.contextChangedCallback) {
-        targetEl.contextChangedCallback(name, oldValue, value)
-      }
-    }
-    observers.push(targetEl)
+    const { setter, arg } = event.detail
+    setter(targetEl, value, arg)
+    observers.push({ targetEl, setter, arg })
     event.detail.handled = true
   })
   if (orphans && orphans.size) {
@@ -74,10 +68,21 @@ function registerProvidedContext(el, name, providedContexts) {
   }
 }
 
-function observeContext(el, name) {
-  const event = sendContextEvent(el, name)
+function contextSetter(targetEl, value, name) {
+  const context = targetEl.context
+  const oldValue = context[name]
+  if (oldValue !== value) {
+    context[name] = value
+    if (typeof targetEl.contextChangedCallback === 'function') {
+      targetEl.contextChangedCallback(name, oldValue, value)
+    }
+  }
+}
+
+function observeContext(el, name, setter = contextSetter, setterArg = name) {
+  const event = sendContextEvent(el, name, setter, setterArg)
   if (!event.detail.handled) {
-    addOrphan(el, name)
+    addOrphan(el, name, setter, setterArg)
   }
 }
 
@@ -89,15 +94,8 @@ function notifyContextChange(el, name, value) {
   const observerMap = el.__wcContextObserverMap
   const observers = observerMap && observerMap[name]
   if (observers) {
-    observers.forEach((observer) => {
-      const context = observer.context
-      const oldValue = context[name]
-      if (oldValue !== value) {
-        context[name] = value
-        if (observer.contextChangedCallback) {
-          observer.contextChangedCallback(name, oldValue, value)
-        }
-      }
+    observers.forEach(({ targetEl, setter, arg }) => {
+      setter(targetEl, value, arg)
     })
   }
 }
