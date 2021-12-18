@@ -7,7 +7,7 @@ const ProviderComponent = class extends Component {
   static providedContexts = {
     valueContext: { value: 'value' },
     propertyContext: { property: 'myProp' },
-    shorthandContext: 'myOtherProp'
+    shorthandContext: 'myOtherProp',
   }
 
   myProp = 'test'
@@ -15,7 +15,11 @@ const ProviderComponent = class extends Component {
 }
 
 const ConsumerComponent = class extends Component {
-  static observedContexts = ['valueContext', 'propertyContext', 'shorthandContext']
+  static observedContexts = [
+    'valueContext',
+    'propertyContext',
+    'shorthandContext',
+  ]
 }
 
 customElements.define('mixin-component', Component)
@@ -39,7 +43,7 @@ describe('withContext', () => {
       </div>
     `
     rootEl = document.getElementById('root')
-    grandfatherEl = document.getElementById('grandfather')    
+    grandfatherEl = document.getElementById('grandfather')
     parentEl = document.getElementById('parent')
   })
 
@@ -54,7 +58,7 @@ describe('withContext', () => {
   })
 
   describe('with providedContexts static property', () => {
-    let el    
+    let el
 
     beforeEach(() => {
       el = new ProviderComponent()
@@ -68,13 +72,13 @@ describe('withContext', () => {
       await Promise.resolve()
       expect(childEl.context.valueContext).toBe('value')
       expect(childEl.context.propertyContext).toBe('test')
-      expect(childEl.context.shorthandContext).toBe('xxx')       
+      expect(childEl.context.shorthandContext).toBe('xxx')
     })
 
     test('should update contexts in child element when calling updateProvidedContext', async () => {
       const childEl = new ConsumerComponent()
       parentEl.appendChild(childEl)
-      await Promise.resolve()      
+      await Promise.resolve()
       el.updateProvidedContext('valueContext', 1)
       expect(childEl.context.valueContext).toBe(1)
     })

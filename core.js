@@ -5,14 +5,14 @@ const resolved = Promise.resolve()
 const orphanResolveQueue = {
   contexts: new Set(),
   running: false,
-  add (context) {
+  add(context) {
     this.contexts.add(context)
     if (!this.running) {
       this.running = true
       resolved.then(() => {
-        this.contexts.forEach(context => {
+        this.contexts.forEach((context) => {
           const orphans = orphanMap[context]
-          orphans.forEach(orphan => {
+          orphans.forEach((orphan) => {
             const event = sendContextEvent(orphan, context)
             if (event.detail.handled) {
               orphans.delete(orphan)
@@ -23,34 +23,35 @@ const orphanResolveQueue = {
         this.running = false
       })
     }
-  }
+  },
 }
 
-function addOrphan (el, name) {
+function addOrphan(el, name) {
   const orphans = orphanMap[name] || (orphanMap[name] = new Set())
   orphans.add(el)
 }
 
-function removeOrphan (el, name) {
+function removeOrphan(el, name) {
   const orphans = orphanMap[name]
   if (orphans) {
     orphans.delete(el)
   }
 }
 
-function sendContextEvent (el, name) {
+function sendContextEvent(el, name) {
   const event = new CustomEvent(`context-request-${name}`, {
     detail: {},
     bubbles: true,
     cancelable: true,
-    composed: true
+    composed: true,
   })
   el.dispatchEvent(event)
   return event
 }
 
-function registerProvidedContext (el, name, providedContexts) {
-  const observerMap = el.__wcContextObserverMap || (el.__wcContextObserverMap = {})
+function registerProvidedContext(el, name, providedContexts) {
+  const observerMap =
+    el.__wcContextObserverMap || (el.__wcContextObserverMap = {})
   const observers = observerMap[name] || (observerMap[name] = [])
   const orphans = orphanMap[name]
   el.addEventListener(`context-request-${name}`, (event) => {
@@ -73,22 +74,22 @@ function registerProvidedContext (el, name, providedContexts) {
   }
 }
 
-function observeContext (el, name) {
+function observeContext(el, name) {
   const event = sendContextEvent(el, name)
   if (!event.detail.handled) {
     addOrphan(el, name)
   }
 }
 
-function unobserveContext (el, name) {
+function unobserveContext(el, name) {
   removeOrphan(el, name)
 }
 
-function notifyContextChange (el, name, value) {
+function notifyContextChange(el, name, value) {
   const observerMap = el.__wcContextObserverMap
   const observers = observerMap && observerMap[name]
   if (observers) {
-    observers.forEach(observer => {
+    observers.forEach((observer) => {
       const context = observer.context
       const oldValue = context[name]
       if (oldValue !== value) {
@@ -101,4 +102,9 @@ function notifyContextChange (el, name, value) {
   }
 }
 
-export {registerProvidedContext, observeContext, unobserveContext, notifyContextChange}
+export {
+  registerProvidedContext,
+  observeContext,
+  unobserveContext,
+  notifyContextChange,
+}

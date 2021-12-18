@@ -1,15 +1,18 @@
 /* eslint-env jest */
-import {registerProvidedContext, observeContext, notifyContextChange} from '../core'
+import {
+  registerProvidedContext,
+  observeContext,
+  notifyContextChange,
+} from '../core'
 
-function defineContextProp (el, name) {
+function defineContextProp(el, name) {
   el.__wcContext = {}
   Object.defineProperty(el, name, {
-    get () {
+    get() {
       return this.__wcContext
-    }
+    },
   })
 }
-
 
 describe('context', () => {
   let rootEl
@@ -46,8 +49,8 @@ describe('context', () => {
   })
 
   describe('when added to a node', () => {
-    beforeEach(() => {            
-      registerProvidedContext(grandfatherEl, 'key', {key: 'value'})
+    beforeEach(() => {
+      registerProvidedContext(grandfatherEl, 'key', { key: 'value' })
     })
 
     test('should be acessible in all children nodes', () => {
@@ -85,17 +88,17 @@ describe('context', () => {
     test('should update childContext', () => {
       grandfatherEl.childContext = {
         key: 'value',
-        key2: undefined
+        key2: undefined,
       }
       expect(grandfatherEl.childContext).toMatchObject({
         key: 'value',
-        key2: undefined
+        key2: undefined,
       })
     })
 
     describe('and when added to a child node', () => {
-      beforeEach(() => {        
-        registerProvidedContext(parentEl, 'key', {key: 'value2'})
+      beforeEach(() => {
+        registerProvidedContext(parentEl, 'key', { key: 'value2' })
       })
 
       test('should override parent context', () => {
@@ -107,7 +110,7 @@ describe('context', () => {
 
     describe('and when added to a child node with different key', () => {
       beforeEach(() => {
-        registerProvidedContext(parentEl, 'key2', {key2: 'value2'})
+        registerProvidedContext(parentEl, 'key2', { key2: 'value2' })
       })
 
       test('should not override parent context', () => {
@@ -118,8 +121,8 @@ describe('context', () => {
     })
 
     describe('and when added to a sibling node', () => {
-      beforeEach(() => {        
-        registerProvidedContext(grandfather2El, 'key', {key: 'value2'})
+      beforeEach(() => {
+        registerProvidedContext(grandfather2El, 'key', { key: 'value2' })
       })
 
       test('should keep independent values', () => {
@@ -168,8 +171,8 @@ describe('context', () => {
       parentEl.contextChangedCallback = callback
 
       defineContextProp(parentEl, 'context')
-      observeContext(parentEl, 'key')      
-      registerProvidedContext(grandfatherEl, 'key', {key: 'value'})
+      observeContext(parentEl, 'key')
+      registerProvidedContext(grandfatherEl, 'key', { key: 'value' })
     })
 
     test('should notify the observer', () => {

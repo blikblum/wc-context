@@ -31,21 +31,24 @@
     "setupFilesAfterEnv": [
       "<rootDir>/test/setup.js"
     ],
-    "testEnvironment": "jest-environment-jsdom-fourteen"
+    "testEnvironment": "jsdom"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.5",
-    "@babel/plugin-proposal-class-properties": "^7.7.4",
-    "@babel/plugin-proposal-decorators": "^7.7.4",
-    "@babel/preset-env": "^7.7.6",
-    "babel-jest": "^24.9.0",
-    "document-register-element": "^1.14.3",
-    "jest": "^24.9.0",
-    "jest-environment-jsdom-fourteen": "^1.0.1",
-    "standard": "^14.3.1"
+    "@babel/core": "^7.16.5",
+    "@babel/plugin-proposal-class-properties": "^7.16.5",
+    "@babel/plugin-proposal-decorators": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "babel-jest": "^27.4.5",
+    "document-register-element": "^1.14.10",
+    "eslint": "^8.5.0",
+    "eslint-config-prettier": "^8.3.0",
+    "jest": "^27.4.5",
+    "lit": "^2.0.2",
+    "prettier": "^2.5.1"
   },
   "scripts": {
-    "lint": "standard src test tools",
+    "format": "prettier lit-element.js skatejs.js wc-context.js core.js test --write",
+    "lint": "eslint lit-element.js skatejs.js wc-context.js core.js test",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cover": "jest --coverage"

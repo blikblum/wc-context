@@ -1,47 +1,44 @@
 module.exports = {
-  "presets": [
+  presets: [
     [
-      "@babel/preset-env",
+      '@babel/preset-env',
       {
-        "targets": {
-          "browsers": [
-            "chrome 60"
-          ]
+        targets: {
+          browsers: ['chrome 60'],
         },
-        "modules": false
-      }
-    ]
+        modules: false,
+      },
+    ],
   ],
-  "plugins": [
+  plugins: [
     [
-      "@babel/plugin-proposal-decorators",
+      '@babel/plugin-proposal-decorators',
       {
-        "legacy": false,
-        "decoratorsBeforeExport": false
-      }
+        legacy: false,
+        decoratorsBeforeExport: false,
+      },
     ],
     [
-      "@babel/plugin-proposal-class-properties",
+      '@babel/plugin-proposal-class-properties',
       {
-        "loose": true
-      }
-    ]
+        loose: true,
+      },
+    ],
+    ['@babel/plugin-proposal-private-methods', { loose: true }],
+    ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
   ],
-  "env": {
-    "test": {
-      "presets": [
+  env: {
+    test: {
+      presets: [
         [
-          "@babel/preset-env",
+          '@babel/preset-env',
           {
-            "targets": {
-              "browsers": [
-                "chrome 60"
-              ]
-            }
-          }
-        ]
-      ]
-    }
-  }
+            targets: {
+              browsers: ['chrome 60'],
+            },
+          },
+        ],
+      ],
+    },
+  },
 }
-
