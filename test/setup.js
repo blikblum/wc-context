@@ -1,1 +1,1 @@
-import 'document-register-element'
+// import 'document-register-element'

@@ -1,35 +1,35 @@
 import { html } from 'lit-element'
-import { styles } from './styles'
-import { Component } from './component'
+import { styles } from './styles.js'
+import { Component } from './component.js'
 
 class ThemeProvider extends Component {
-  static get properties () {
+  static get properties() {
     return {
       theme: { type: String },
       alttheme: { type: String },
-      activeTheme: { type: String }
+      activeTheme: { type: String },
     }
   }
 
-  static get providedContexts () {
+  static get providedContexts() {
     return {
-      theme: { property: 'activeTheme' }
+      theme: { property: 'activeTheme' },
     }
   }
 
-  toggleTheme () {      
+  toggleTheme() {
     const primaryTheme = this.theme || 'light'
     const altTheme = this.alttheme || 'dark'
     this.activeTheme =
-      this.activeTheme === primaryTheme ? altTheme : primaryTheme    
+      this.activeTheme === primaryTheme ? altTheme : primaryTheme
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     this.activeTheme = this.theme || 'light'
   }
 
-  render () {
+  render() {
     return html`
       <button @click=${this.toggleTheme}>toggle theme</button>
       <slot></slot>
@@ -38,11 +38,11 @@ class ThemeProvider extends Component {
 }
 
 class ThemeConsumer extends Component {
-  static get observedContexts () {
+  static get observedContexts() {
     return ['theme']
   }
 
-  contextChangedCallback (name, oldValue, value) {
+  contextChangedCallback(name, oldValue, value) {
     console.log(
       this.constructor.name,
       `context "${name}" changed from "${oldValue}" to "${value}"`
@@ -50,37 +50,37 @@ class ThemeConsumer extends Component {
     this.requestUpdate()
   }
 
-  render () {
-    return html`<div style=${styles[this.context.theme]}>${
-      this.context.theme
-    }</div>`
+  render() {
+    return html`<div style=${styles[this.context.theme]}>
+      ${this.context.theme}
+    </div>`
   }
 }
 
 class TitleProvider extends Component {
-  static get properties () {
+  static get properties() {
     return {
-      value: { type: String }
+      value: { type: String },
     }
   }
 
-  static get providedContexts () {
+  static get providedContexts() {
     return {
-      title: { property: 'value' }
+      title: { property: 'value' },
     }
-  }  
-  
-  render () {
+  }
+
+  render() {
     return html`<slot></slot>`
   }
 }
 
 class TitleThemeConsumer extends Component {
-  static get observedContexts () {
+  static get observedContexts() {
     return ['title', 'theme']
   }
 
-  contextChangedCallback (name, oldValue, value) {
+  contextChangedCallback(name, oldValue, value) {
     console.log(
       this.constructor.name,
       `context "${name}" changed from "${oldValue}" to "${value}"`
@@ -88,21 +88,21 @@ class TitleThemeConsumer extends Component {
     this.requestUpdate()
   }
 
-  render () {
+  render() {
     return html`
-    <div>${this.context.title}</div>
-    <div style=${styles[this.context.theme]}>${this.context.theme}</div>
+      <div>${this.context.title}</div>
+      <div style=${styles[this.context.theme]}>${this.context.theme}</div>
     `
   }
 }
 
 class App extends Component {
-  static get properties () {
+  static get properties() {
     return {
-      state: { type: Object }
+      state: { type: Object },
     }
   }
-  constructor () {
+  constructor() {
     super()
     this.state = { title: 'one title' }
     this.toggleTitle = () => {
@@ -110,13 +110,13 @@ class App extends Component {
         ...this.state,
         ...{
           title:
-            this.state.title === 'one title' ? 'another title' : 'one title'
-        }
+            this.state.title === 'one title' ? 'another title' : 'one title',
+        },
       }
     }
   }
 
-  render () {
+  render() {
     return html`
       <div>
         <theme-provider>
@@ -131,7 +131,7 @@ class App extends Component {
           <title-provider value=${this.state.title}>
             <titletheme-consumer></titletheme-consumer>
           </title-provider>
-        </theme-provider>        
+        </theme-provider>
         <button @click=${this.toggleTitle}>Toggle title</button>
       </div>
     `

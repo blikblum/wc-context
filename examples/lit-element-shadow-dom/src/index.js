@@ -1,18 +1,15 @@
-import { fromProp } from 'wc-context/lit-element'
-import { html } from '@polymer/lit-element'
-import { styles } from './styles'
-import { Component } from './component'
+import { html } from 'lit-element'
+import { styles } from './styles.js'
+import { Component } from './component.js'
 
 class ThemeSwitcher extends Component {
-  static get properties () {
-    return {
-      theme: { type: String },
-      alttheme: { type: String },
-      activeTheme: { type: String }
-    }
+  static properties = {
+    theme: { type: String },
+    alttheme: { type: String },
+    activeTheme: { type: String },
   }
 
-  toggleTheme = () => {
+  toggleTheme() {
     const primaryTheme = this.theme || 'light'
     const altTheme = this.alttheme || 'dark'
     this.activeTheme =
@@ -26,32 +23,30 @@ class ThemeSwitcher extends Component {
 
   render() {
     return html`
-    <theme-provider id=${this.id} theme=${this.activeTheme}> 
-      <button @click=${this.toggleTheme}>toggle theme</button>
-      <slot/>
-    </theme-provider>
+      <theme-provider id=${this.id} theme=${this.activeTheme}>
+        <button @click=${this.toggleTheme}>toggle theme</button>
+        <slot />
+      </theme-provider>
     `
   }
 }
 
 class ThemeProvider extends Component {
   static properties = {
-    theme: {type: String}
+    theme: { type: String },
   }
 
-  childContext = {
-    theme: fromProp('theme')
+  static providedContexts = {
+    theme: { property: 'theme' },
   }
 
   render() {
-    return html`<slot/>`
+    return html`<slot />`
   }
 }
 
 class ThemeConsumer extends Component {
-  static get observedContexts() {
-    return ['theme']
-  }
+  static observedContexts = ['theme']
 
   contextChangedCallback(name, oldValue, value) {
     console.log(
@@ -63,30 +58,28 @@ class ThemeConsumer extends Component {
   }
 
   render() {
-    return html`<div style=${styles[this.context.theme]}>${
-      this.context.theme
-    }</div>`
+    return html`<div style=${styles[this.context.theme]}>
+      ${this.context.theme}
+    </div>`
   }
 }
 
 class TitleProvider extends Component {
   static properties = {
-    value: {type: String}
+    value: { type: String },
   }
 
-  childContext = {
-    title: fromProp('value')
+  static providedContexts = {
+    title: { property: 'value' },
   }
 
   render() {
-    return html`<slot/>`
+    return html`<slot />`
   }
 }
 
 class TitleThemeConsumer extends Component {
-  static get observedContexts() {
-    return ['title', 'theme']
-  }
+  static observedContexts = ['title', 'theme']
 
   contextChangedCallback(name, oldValue, value) {
     console.log(
@@ -98,28 +91,28 @@ class TitleThemeConsumer extends Component {
 
   render() {
     return html`
-    <div>${this.context.title}</div>
-    <div style=${styles[this.context.theme]}>${this.context.theme}</div>
+      <div>${this.context.title}</div>
+      <div style=${styles[this.context.theme]}>${this.context.theme}</div>
     `
   }
 }
 
 class App extends Component {
-  
-  static get properties () {
-    return {
-      state: { type: Object }
-    }
+  static properties = {
+    state: { type: Object },
   }
 
-  state = { title: 'one title' }
-  
-  toggleTitle = () => {
+  constructor() {
+    super()
+    this.state = { title: 'one title' }
+  }
+
+  toggleTitle() {
     this.state = {
       ...this.state,
       ...{
-        title: this.state.title === 'one title' ? 'another title' : 'one title'
-      }
+        title: this.state.title === 'one title' ? 'another title' : 'one title',
+      },
     }
   }
   render() {
@@ -137,7 +130,7 @@ class App extends Component {
           <title-provider value=${this.state.title}>
             <titletheme-consumer></titletheme-consumer>
           </title-provider>
-        </theme-switcher>        
+        </theme-switcher>
         <button @click=${this.toggleTitle}>Toggle title</button>
       </div>
     `
@@ -150,7 +143,6 @@ customElements.define('theme-consumer', ThemeConsumer)
 customElements.define('title-provider', TitleProvider)
 customElements.define('titletheme-consumer', TitleThemeConsumer)
 customElements.define('context-example', App)
-
 
 const appEl = document.createElement('context-example')
 

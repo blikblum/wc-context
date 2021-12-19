@@ -7,3 +7,4 @@ docs/dist
 node_modules
 npm-debug.log
 /.idea/
+/yarn-error.log

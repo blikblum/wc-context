@@ -38,17 +38,21 @@
     "@babel/plugin-proposal-class-properties": "^7.16.5",
     "@babel/plugin-proposal-decorators": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
+    "@web/dev-server": "^0.1.28",
     "babel-jest": "^27.4.5",
     "document-register-element": "^1.14.10",
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
     "jest": "^27.4.5",
     "lit": "^2.0.2",
+    "lit-element": "^2",
     "prettier": "^2.5.1"
   },
   "scripts": {
     "format": "prettier lit-element.js skatejs.js wc-context.js core.js test --write",
     "lint": "eslint lit-element.js skatejs.js wc-context.js core.js test",
+    "start": "web-dev-server --open examples/ --node-resolve",
+    "start:watch": "web-dev-server --open examples/ --node-resolve --watch",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cover": "jest --coverage"
