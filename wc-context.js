@@ -1,8 +1,8 @@
 import {
   observeContext,
   unobserveContext,
-  registerProvidedContext,
-  notifyContextChange,
+  registerContext,
+  updateContext,
 } from './core.js'
 
 const initializedElements = new WeakSet()
@@ -17,7 +17,7 @@ const withContext = (Base) => {
       const providedContexts =
         this.__wcProvidedContexts || (this.__wcProvidedContexts = {})
       providedContexts[name] = value
-      notifyContextChange(this, name, value)
+      updateContext(this, name, value)
     }
 
     connectedCallback() {
@@ -37,7 +37,7 @@ const withContext = (Base) => {
             const property =
               typeof config === 'string' ? config : config.property
             providedContexts[name] = property ? this[property] : config.value
-            registerProvidedContext(this, name, providedContexts)
+            registerContext(this, name, providedContexts)
           })
         }
         initializedElements.add(this)

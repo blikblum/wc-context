@@ -1,9 +1,5 @@
 /* eslint-env jest */
-import {
-  registerProvidedContext,
-  observeContext,
-  notifyContextChange,
-} from '../core'
+import { registerContext, observeContext, updateContext } from '../core'
 
 function defineContextProp(el, name) {
   el.__wcContext = {}
@@ -50,7 +46,7 @@ describe('context', () => {
 
   describe('when registered in a node', () => {
     beforeEach(() => {
-      registerProvidedContext(grandfatherEl, 'key', { key: 'value' })
+      registerContext(grandfatherEl, 'key', { key: 'value' })
     })
 
     test('should be acessible in all children nodes', () => {
@@ -94,9 +90,9 @@ describe('context', () => {
       expect(childEl.otherProp).toBe('value')
     })
 
-    describe('and when added to a child node', () => {
+    describe('and registered to a child node', () => {
       beforeEach(() => {
-        registerProvidedContext(parentEl, 'key', { key: 'value2' })
+        registerContext(parentEl, 'key', { key: 'value2' })
       })
 
       test('should override parent context', () => {
@@ -106,9 +102,9 @@ describe('context', () => {
       })
     })
 
-    describe('and when added to a child node with different key', () => {
+    describe('and registered to a child node with different key', () => {
       beforeEach(() => {
-        registerProvidedContext(parentEl, 'key2', { key2: 'value2' })
+        registerContext(parentEl, 'key2', { key2: 'value2' })
       })
 
       test('should not override parent context', () => {
@@ -118,9 +114,9 @@ describe('context', () => {
       })
     })
 
-    describe('and when added to a sibling node', () => {
+    describe('and registered to a sibling node', () => {
       beforeEach(() => {
-        registerProvidedContext(grandfather2El, 'key', { key: 'value2' })
+        registerContext(grandfather2El, 'key', { key: 'value2' })
       })
 
       test('should keep independent values', () => {
@@ -142,27 +138,27 @@ describe('context', () => {
         observeContext(childEl, 'key')
       })
 
-      test('should notify the observer', () => {
+      test('should call contextChangedCallback in the observer', () => {
         expect(callback).toHaveBeenCalledTimes(1)
         expect(callback).toHaveBeenCalledWith('key', undefined, 'value')
       })
 
-      test('should notify the observer when context is updated', () => {
+      test('should call contextChangedCallback when context is updated', () => {
         callback.mockClear()
-        notifyContextChange(grandfatherEl, 'key', 'value2')
+        updateContext(grandfatherEl, 'key', 'value2')
         expect(callback).toHaveBeenCalledTimes(1)
         expect(callback).toHaveBeenCalledWith('key', 'value', 'value2')
       })
 
-      test('should not notify the observer when context is updated with same value', () => {
+      test('should not call contextChangedCallback when context is updated with same value', () => {
         callback.mockClear()
-        notifyContextChange(grandfatherEl, 'key', 'value')
+        updateContext(grandfatherEl, 'key', 'value')
         expect(callback).not.toHaveBeenCalled()
       })
     })
   })
 
-  describe('when added to a node after a child try to observe', () => {
+  describe('when registered to a node after a child try to observe', () => {
     let callback
     beforeEach(() => {
       callback = jest.fn()
@@ -170,10 +166,10 @@ describe('context', () => {
 
       defineContextProp(parentEl, 'context')
       observeContext(parentEl, 'key')
-      registerProvidedContext(grandfatherEl, 'key', { key: 'value' })
+      registerContext(grandfatherEl, 'key', { key: 'value' })
     })
 
-    test('should notify the observer', () => {
+    test('should call contextChangedCallback in the observer', () => {
       expect(callback).toHaveBeenCalledTimes(1)
       expect(callback).toHaveBeenCalledWith('key', undefined, 'value')
     })

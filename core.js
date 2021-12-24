@@ -49,7 +49,7 @@ function sendContextEvent(el, name, setter, arg) {
   return event
 }
 
-function registerProvidedContext(el, name, providedContexts) {
+function registerContext(el, name, providedContexts) {
   const observerMap =
     el.__wcContextObserverMap || (el.__wcContextObserverMap = {})
   const observers = observerMap[name] || (observerMap[name] = [])
@@ -90,7 +90,7 @@ function unobserveContext(el, name) {
   removeOrphan(el, name)
 }
 
-function notifyContextChange(el, name, value) {
+function updateContext(el, name, value) {
   const observerMap = el.__wcContextObserverMap
   const observers = observerMap && observerMap[name]
   if (observers) {
@@ -100,9 +100,4 @@ function notifyContextChange(el, name, value) {
   }
 }
 
-export {
-  registerProvidedContext,
-  observeContext,
-  unobserveContext,
-  notifyContextChange,
-}
+export { registerContext, observeContext, unobserveContext, updateContext }

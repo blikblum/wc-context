@@ -1,8 +1,8 @@
 import {
   observeContext,
   unobserveContext,
-  registerProvidedContext,
-  notifyContextChange,
+  registerContext,
+  updateContext,
 } from './core.js'
 
 const initializedElements = new WeakSet()
@@ -35,7 +35,7 @@ const withContext = (Base) => {
             if (property) {
               mappedProps[name] = property
             }
-            registerProvidedContext(this, name, providedContexts)
+            registerContext(this, name, providedContexts)
           })
         }
         initializedElements.add(this)
@@ -61,7 +61,7 @@ const withContext = (Base) => {
           if (changedProperties.has(property)) {
             const value = this[property]
             providedContexts[contextName] = value
-            notifyContextChange(this, contextName, value)
+            updateContext(this, contextName, value)
           }
         })
       }
