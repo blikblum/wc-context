@@ -2,6 +2,7 @@
 import {
   registerContext,
   observeContext,
+  unobserveContext,
   updateContext,
   createContext,
   contextSetter,
@@ -116,6 +117,28 @@ describe('context', () => {
       })
     })
 
+    describe('and context is updated', () => {
+      beforeEach(() => {
+        observeContext(parentEl, 'key')
+        updateContext(grandfatherEl, 'key', 'value2')
+      })
+      it('should update the observer context value', () => {
+        expect(parentEl.key).toBe('value2')
+      })
+    })
+
+    describe('and context is updated after unobserved', () => {
+      beforeEach(() => {
+        observeContext(parentEl, 'key')
+        unobserveContext(parentEl, 'key')
+        parentEl.key = 'none'
+        updateContext(grandfatherEl, 'key', 'value2')
+      })
+      it('should not update the observer context value', () => {
+        expect(parentEl.key).toBe('none')
+      })
+    })
+
     describe('and observed by a child node after context is updated', () => {
       beforeEach(() => {
         updateContext(grandfatherEl, 'key', 'value2')
@@ -194,7 +217,6 @@ describe('context', () => {
         expect(childEl.key).toBe('value')
       })
     })
-
   })
 
   describe('when registered to a node after a child try to observe', () => {
