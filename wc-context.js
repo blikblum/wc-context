@@ -9,10 +9,6 @@ const initializedElements = new WeakSet()
 
 const withContext = (Base) => {
   return class extends Base {
-    get context() {
-      return this.__wcContext || (this.__wcContext = {})
-    }
-
     updateProvidedContext(name, value) {
       const providedContexts =
         this.__wcProvidedContexts || (this.__wcProvidedContexts = {})

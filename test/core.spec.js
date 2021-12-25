@@ -1,15 +1,6 @@
 /* eslint-env jest */
 import { registerContext, observeContext, updateContext } from '../core'
 
-function defineContextProp(el, name) {
-  el.__wcContext = {}
-  Object.defineProperty(el, name, {
-    get() {
-      return this.__wcContext
-    },
-  })
-}
-
 describe('context', () => {
   let rootEl
   let grandfatherEl
@@ -50,35 +41,29 @@ describe('context', () => {
     })
 
     test('should be acessible in all children nodes', () => {
-      defineContextProp(parentEl, 'context')
       observeContext(parentEl, 'key')
-      defineContextProp(childEl, 'context')
       observeContext(childEl, 'key')
-      expect(parentEl.context.key).toBe('value')
-      expect(childEl.context.key).toBe('value')
+      expect(parentEl.key).toBe('value')
+      expect(childEl.key).toBe('value')
     })
 
     test('should not be acessible in parent nodes', () => {
-      defineContextProp(rootEl, 'context')
       observeContext(rootEl, 'key')
-      expect(rootEl.context.key).toBeUndefined()
+      expect(rootEl.key).toBeUndefined()
     })
 
     test('should not be acessible in sibling nodes', () => {
-      defineContextProp(grandfather2El, 'context')
       observeContext(grandfather2El, 'key')
-      defineContextProp(child3El, 'context')
       observeContext(child3El, 'key')
-      expect(grandfather2El.context.key).toBeUndefined()
-      expect(child3El.context.key).toBeUndefined()
+      expect(grandfather2El.key).toBeUndefined()
+      expect(child3El.key).toBeUndefined()
     })
 
     test('should return same value when called repeatedly', () => {
-      defineContextProp(childEl, 'context')
       observeContext(childEl, 'key')
-      expect(childEl.context.key).toBe('value')
-      expect(childEl.context.key).toBe('value')
-      expect(childEl.context.key).toBe('value')
+      expect(childEl.key).toBe('value')
+      expect(childEl.key).toBe('value')
+      expect(childEl.key).toBe('value')
     })
 
     test('should allow to configure how context value is set', () => {
@@ -96,9 +81,8 @@ describe('context', () => {
       })
 
       test('should override parent context', () => {
-        defineContextProp(childEl, 'context')
         observeContext(childEl, 'key')
-        expect(childEl.context.key).toBe('value2')
+        expect(childEl.key).toBe('value2')
       })
     })
 
@@ -108,9 +92,8 @@ describe('context', () => {
       })
 
       test('should not override parent context', () => {
-        defineContextProp(childEl, 'context')
         observeContext(childEl, 'key')
-        expect(childEl.context.key).toBe('value')
+        expect(childEl.key).toBe('value')
       })
     })
 
@@ -120,12 +103,10 @@ describe('context', () => {
       })
 
       test('should keep independent values', () => {
-        defineContextProp(childEl, 'context')
         observeContext(childEl, 'key')
-        defineContextProp(child3El, 'context')
         observeContext(child3El, 'key')
-        expect(childEl.context.key).toBe('value')
-        expect(child3El.context.key).toBe('value2')
+        expect(childEl.key).toBe('value')
+        expect(child3El.key).toBe('value2')
       })
     })
 
@@ -134,7 +115,6 @@ describe('context', () => {
       beforeEach(() => {
         callback = jest.fn()
         childEl.contextChangedCallback = callback
-        defineContextProp(childEl, 'context')
         observeContext(childEl, 'key')
       })
 
@@ -164,7 +144,6 @@ describe('context', () => {
       callback = jest.fn()
       parentEl.contextChangedCallback = callback
 
-      defineContextProp(parentEl, 'context')
       observeContext(parentEl, 'key')
       registerContext(grandfatherEl, 'key', { key: 'value' })
     })
@@ -175,7 +154,7 @@ describe('context', () => {
     })
 
     test('should update the observer context', () => {
-      expect(parentEl.context.key).toBe('value')
+      expect(parentEl.key).toBe('value')
     })
   })
 })

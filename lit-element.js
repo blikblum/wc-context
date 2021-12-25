@@ -9,10 +9,6 @@ const initializedElements = new WeakSet()
 
 const withContext = (Base) => {
   return class extends Base {
-    get context() {
-      return this.__wcContext || (this.__wcContext = {})
-    }
-
     connectedCallback() {
       super.connectedCallback()
       const observedContexts = this.constructor.observedContexts

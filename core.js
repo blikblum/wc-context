@@ -69,10 +69,9 @@ function registerContext(el, name, providedContexts) {
 }
 
 function contextSetter(targetEl, value, name) {
-  const context = targetEl.context
-  const oldValue = context[name]
+  const oldValue = targetEl[name]
   if (oldValue !== value) {
-    context[name] = value
+    targetEl[name] = value
     if (typeof targetEl.contextChangedCallback === 'function') {
       targetEl.contextChangedCallback(name, oldValue, value)
     }

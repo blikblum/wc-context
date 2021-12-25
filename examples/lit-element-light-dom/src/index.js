@@ -51,9 +51,7 @@ class ThemeConsumer extends Component {
   }
 
   render() {
-    return html`<div style=${styles[this.context.theme]}>
-      ${this.context.theme}
-    </div>`
+    return html`<div style=${styles[this.theme]}>${this.theme}</div>`
   }
 }
 
@@ -90,8 +88,8 @@ class TitleThemeConsumer extends Component {
 
   render() {
     return html`
-      <div>${this.context.title}</div>
-      <div style=${styles[this.context.theme]}>${this.context.theme}</div>
+      <div>${this.title}</div>
+      <div style=${styles[this.theme]}>${this.theme}</div>
     `
   }
 }

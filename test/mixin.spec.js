@@ -47,11 +47,6 @@ describe('withContext', () => {
     parentEl = document.getElementById('parent')
   })
 
-  test('should define a context property in element', () => {
-    const el = new Component()
-    expect(el.context).toBeDefined()
-  })
-
   test('should define a updateProvidedContext method in element', () => {
     const el = new Component()
     expect(el.updateProvidedContext).toBeInstanceOf(Function)
@@ -70,9 +65,9 @@ describe('withContext', () => {
       const childEl = new ConsumerComponent()
       parentEl.appendChild(childEl)
       await Promise.resolve()
-      expect(childEl.context.valueContext).toBe('value')
-      expect(childEl.context.propertyContext).toBe('test')
-      expect(childEl.context.shorthandContext).toBe('xxx')
+      expect(childEl.valueContext).toBe('value')
+      expect(childEl.propertyContext).toBe('test')
+      expect(childEl.shorthandContext).toBe('xxx')
     })
 
     test('should update contexts in child element when calling updateProvidedContext', async () => {
@@ -80,7 +75,7 @@ describe('withContext', () => {
       parentEl.appendChild(childEl)
       await Promise.resolve()
       el.updateProvidedContext('valueContext', 1)
-      expect(childEl.context.valueContext).toBe(1)
+      expect(childEl.valueContext).toBe(1)
     })
   })
 })
