@@ -37,7 +37,7 @@ describe('context', () => {
 
   describe('when registered in a node', () => {
     beforeEach(() => {
-      registerContext(grandfatherEl, 'key', { key: 'value' })
+      registerContext(grandfatherEl, 'key', 'value')
     })
 
     test('should be acessible in all children nodes', () => {
@@ -77,7 +77,7 @@ describe('context', () => {
 
     describe('and registered to a child node', () => {
       beforeEach(() => {
-        registerContext(parentEl, 'key', { key: 'value2' })
+        registerContext(parentEl, 'key', 'value2')
       })
 
       test('should override parent context', () => {
@@ -88,7 +88,7 @@ describe('context', () => {
 
     describe('and registered to a child node with different key', () => {
       beforeEach(() => {
-        registerContext(parentEl, 'key2', { key2: 'value2' })
+        registerContext(parentEl, 'key2', 'value2')
       })
 
       test('should not override parent context', () => {
@@ -99,7 +99,7 @@ describe('context', () => {
 
     describe('and registered to a sibling node', () => {
       beforeEach(() => {
-        registerContext(grandfather2El, 'key', { key: 'value2' })
+        registerContext(grandfather2El, 'key', 'value2')
       })
 
       test('should keep independent values', () => {
@@ -107,6 +107,16 @@ describe('context', () => {
         observeContext(child3El, 'key')
         expect(childEl.key).toBe('value')
         expect(child3El.key).toBe('value2')
+      })
+    })
+
+    describe('and observed by a child node after context is updated', () => {
+      beforeEach(() => {
+        updateContext(grandfatherEl, 'key', 'value2')
+        observeContext(parentEl, 'key')
+      })
+      it('should provide updated value', () => {
+        expect(parentEl.key).toBe('value2')
       })
     })
 
@@ -145,7 +155,7 @@ describe('context', () => {
       parentEl.contextChangedCallback = callback
 
       observeContext(parentEl, 'key')
-      registerContext(grandfatherEl, 'key', { key: 'value' })
+      registerContext(grandfatherEl, 'key', 'value')
     })
 
     test('should call contextChangedCallback in the observer', () => {

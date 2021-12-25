@@ -10,9 +10,6 @@ const initializedElements = new WeakSet()
 const withContext = (Base) => {
   return class extends Base {
     updateProvidedContext(name, value) {
-      const providedContexts =
-        this.__wcProvidedContexts || (this.__wcProvidedContexts = {})
-      providedContexts[name] = value
       updateContext(this, name, value)
     }
 
@@ -24,16 +21,18 @@ const withContext = (Base) => {
       }
 
       if (!initializedElements.has(this)) {
-        const providedContextConfigs = this.constructor.providedContexts
-        if (providedContextConfigs) {
-          const providedContexts =
-            this.__wcProvidedContexts || (this.__wcProvidedContexts = {})
-          Object.keys(providedContextConfigs).forEach((name) => {
-            const config = providedContextConfigs[name]
+        const providedContexts = this.constructor.providedContexts
+        if (providedContexts) {
+          Object.keys(providedContexts).forEach((name) => {
+            const config = providedContexts[name]
             const property =
               typeof config === 'string' ? config : config.property
-            providedContexts[name] = property ? this[property] : config.value
-            registerContext(this, name, providedContexts)
+
+            registerContext(
+              this,
+              name,
+              property ? this[property] : config.value
+            )
           })
         }
         initializedElements.add(this)

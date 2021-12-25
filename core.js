@@ -49,9 +49,12 @@ function sendContextEvent(el, name, setter, arg) {
   return event
 }
 
-function registerContext(el, name, providedContexts) {
+function registerContext(el, name, initialValue) {
   const observerMap =
     el.__wcContextObserverMap || (el.__wcContextObserverMap = {})
+  const providedContexts =
+    el.__wcContextProvided || (el.__wcContextProvided = {})
+  providedContexts[name] = initialValue
   const observers = observerMap[name] || (observerMap[name] = [])
   const orphans = orphanMap[name]
   el.addEventListener(`context-request-${name}`, (event) => {
@@ -91,6 +94,11 @@ function unobserveContext(el, name) {
 
 function updateContext(el, name, value) {
   const observerMap = el.__wcContextObserverMap
+  const providedContexts = el.__wcContextProvided
+  if (providedContexts) {
+    providedContexts[name] = value
+  }
+
   const observers = observerMap && observerMap[name]
   if (observers) {
     observers.forEach(({ targetEl, setter, arg }) => {
