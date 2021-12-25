@@ -49,6 +49,18 @@ function sendContextEvent(el, name, setter, arg) {
   return event
 }
 
+let contextCount = 0
+
+function createContext(name) {
+  return {
+    id: `${name}${++contextCount}`,
+    name,
+    toString() {
+      return this.id
+    },
+  }
+}
+
 function registerContext(el, name, initialValue) {
   const observerMap =
     el.__wcContextObserverMap || (el.__wcContextObserverMap = {})
@@ -107,4 +119,11 @@ function updateContext(el, name, value) {
   }
 }
 
-export { registerContext, observeContext, unobserveContext, updateContext }
+export {
+  createContext,
+  registerContext,
+  observeContext,
+  unobserveContext,
+  updateContext,
+  contextSetter,
+}

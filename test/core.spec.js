@@ -1,5 +1,11 @@
 /* eslint-env jest */
-import { registerContext, observeContext, updateContext } from '../core'
+import {
+  registerContext,
+  observeContext,
+  updateContext,
+  createContext,
+  contextSetter,
+} from '../core'
 
 describe('context', () => {
   let rootEl
@@ -148,12 +154,56 @@ describe('context', () => {
     })
   })
 
+  describe('when registered in a node with identifier returned by createContext', () => {
+    let ctx
+    beforeEach(() => {
+      ctx = createContext('myContext')
+      registerContext(grandfatherEl, ctx, 'value')
+    })
+
+    test('should be acessible in all children nodes', () => {
+      observeContext(parentEl, ctx, contextSetter, 'key')
+      observeContext(childEl, ctx, contextSetter, 'key')
+      expect(parentEl.key).toBe('value')
+      expect(childEl.key).toBe('value')
+    })
+
+    test('should not be acessible in parent nodes', () => {
+      observeContext(rootEl, ctx, contextSetter, 'key')
+
+      expect(rootEl.key).toBeUndefined()
+    })
+
+    test('should not be acessible in sibling nodes', () => {
+      observeContext(grandfather2El, ctx, contextSetter, 'key')
+
+      observeContext(child3El, ctx, contextSetter, 'key')
+      expect(grandfather2El.key).toBeUndefined()
+      expect(child3El.key).toBeUndefined()
+    })
+
+    describe('and registered to a child node with different identifier', () => {
+      let ctx2
+      beforeEach(() => {
+        ctx2 = createContext('myContext')
+        registerContext(parentEl, ctx2, 'value2')
+      })
+
+      test('should not override parent context', () => {
+        observeContext(childEl, ctx, contextSetter, 'key')
+        expect(childEl.key).toBe('value')
+      })
+    })
+
+  })
+
   describe('when registered to a node after a child try to observe', () => {
     let callback
     beforeEach(() => {
       callback = jest.fn()
       parentEl.contextChangedCallback = callback
 
+      observeContext(child3El, 'key')
       observeContext(parentEl, 'key')
       registerContext(grandfatherEl, 'key', 'value')
     })
@@ -165,6 +215,10 @@ describe('context', () => {
 
     test('should update the observer context', () => {
       expect(parentEl.key).toBe('value')
+    })
+
+    test('should not update the observer context of not children', () => {
+      expect(child3El.key).toBeUndefined
     })
   })
 })
