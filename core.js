@@ -14,8 +14,10 @@ const orphanResolveQueue = {
           const orphans = orphanMap[context]
           orphans.forEach(({ setter, arg }, orphan) => {
             const event = sendContextEvent(orphan, context, setter, arg)
-            if (event.detail.handled) {
+            const provider = event.detail.provider
+            if (provider) {
               orphans.delete(orphan)
+              registerProvider(orphan, context, provider)
             }
           })
         })
@@ -108,6 +110,12 @@ function contextSetter(consumer, value, name) {
   }
 }
 
+function registerProvider(consumer, context, provider) {
+  const providerMap =
+    consumer.__wcContextProviderMap || (consumer.__wcContextProviderMap = {})
+  providerMap[context] = provider
+}
+
 function observeContext(
   consumer,
   context,
@@ -117,9 +125,7 @@ function observeContext(
   const event = sendContextEvent(consumer, context, setter, setterArg)
   const provider = event.detail.provider
   if (provider) {
-    const providerMap =
-      consumer.__wcContextProviderMap || (consumer.__wcContextProviderMap = {})
-    providerMap[context] = provider
+    registerProvider(consumer, context, provider)
   } else {
     addOrphan(consumer, context, setter, setterArg)
   }

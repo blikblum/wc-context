@@ -242,5 +242,16 @@ describe('context', () => {
     test('should not update the observer context of not children', () => {
       expect(child3El.key).toBeUndefined
     })
+
+    describe('and context is updated after unobserved', () => {
+      beforeEach(() => {
+        unobserveContext(parentEl, 'key')
+        parentEl.key = 'none'
+        updateContext(grandfatherEl, 'key', 'value2')
+      })
+      it('should not update the observer context value', () => {
+        expect(parentEl.key).toBe('none')
+      })
+    })
   })
 })
