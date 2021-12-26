@@ -63,6 +63,10 @@ function createContext(name) {
   }
 }
 
+function getProviderValue(provider, { getter, payload }) {
+  return getter(provider, payload)
+}
+
 function providerGetter(provider, payload) {
   return payload
 }
@@ -78,8 +82,7 @@ function registerContext(provider, context, payload, getter = providerGetter) {
   provider.addEventListener(`context-request-${context}`, (event) => {
     event.stopPropagation()
     const consumer = event.target
-    const { getter, payload: getterPayload } = providedContexts[context]
-    const value = getter(provider, getterPayload)
+    const value = getProviderValue(provider, providedContexts[context])
     const { setter, arg } = event.detail
     setter(consumer, value, arg)
     observers.push({ consumer, setter, arg })
@@ -90,7 +93,7 @@ function registerContext(provider, context, payload, getter = providerGetter) {
   }
 }
 
-function updateContext(provider, context, value) {
+function updateContext(provider, context, payload) {
   const observerMap = provider.__wcContextObserverMap
   const providedContexts = provider.__wcContextProvided
   const providedContext = providedContexts && providedContexts[context]
@@ -101,13 +104,11 @@ function updateContext(provider, context, value) {
     )
   }
 
-  if (value !== undefined) {
-    providedContext.payload = value
+  if (payload !== undefined) {
+    providedContext.payload = payload
   }
 
-  const { getter, payload } = providedContext
-
-  value = getter(provider, payload)
+  const value = getProviderValue(provider, providedContext)
 
   const observers = observerMap && observerMap[context]
   if (observers) {
