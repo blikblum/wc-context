@@ -76,7 +76,7 @@ function registerContext(el, name, initialValue) {
     const { setter, arg } = event.detail
     setter(targetEl, value, arg)
     observers.push({ targetEl, setter, arg })
-    event.detail.handled = true
+    event.detail.provider = el
   })
   if (orphans && orphans.size) {
     orphanResolveQueue.add(name)
@@ -95,12 +95,37 @@ function contextSetter(targetEl, value, name) {
 
 function observeContext(el, name, setter = contextSetter, setterArg = name) {
   const event = sendContextEvent(el, name, setter, setterArg)
-  if (!event.detail.handled) {
+  const provider = event.detail.provider
+  if (provider) {
+    const providerMap =
+      el.__wcContextProviderMap || (el.__wcContextProviderMap = {})
+    providerMap[name] = provider
+  } else {
     addOrphan(el, name, setter, setterArg)
   }
 }
 
+function removeObserver(provider, name, consumer) {
+  if (provider) {
+    const observerMap = provider.__wcContextObserverMap
+    if (observerMap) {
+      const observers = observerMap[name]
+      const consumerIndex = observers.findIndex(
+        (observer) => observer.targetEl === consumer
+      )
+      if (consumerIndex !== -1) {
+        observers.splice(consumerIndex, 1)
+      }
+    }
+  }
+}
+
 function unobserveContext(el, name) {
+  const providerMap = el.__wcContextProviderMap
+  if (providerMap) {
+    removeObserver(providerMap[name], name, el)
+  }
+
   removeOrphan(el, name)
 }
 
