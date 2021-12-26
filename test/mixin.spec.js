@@ -22,27 +22,23 @@ const ConsumerComponent = class extends Component {
   ]
 }
 
-customElements.define('mixin-component', Component)
-customElements.define('mixin-provider-component', ProviderComponent)
-customElements.define('mixin-consumer-component', ConsumerComponent)
+customElements.define('vanilla-component', Component)
+customElements.define('vanilla-provider', ProviderComponent)
+customElements.define('vanilla-consumer', ConsumerComponent)
 
 // unable to create custom elements with jsdom
 describe('withContext', () => {
-  let rootEl
   let grandfatherEl
   let parentEl
   beforeEach(() => {
     document.body.innerHTML = `
       <div id="root">
-        <div id="grandfather">
-          <div id="parent">            
-          </div>
-          <div id="parent2">            
-          </div>
-        </div>
+        <vanilla-provider id="grandfather">
+          <vanilla-consumer id="parent"></vanilla-consumer>
+          <div id="parent2"></div>
+        </vanilla-provider>
       </div>
     `
-    rootEl = document.getElementById('root')
     grandfatherEl = document.getElementById('grandfather')
     parentEl = document.getElementById('parent')
   })
@@ -53,29 +49,15 @@ describe('withContext', () => {
   })
 
   describe('with providedContexts static property', () => {
-    let el
-
-    beforeEach(() => {
-      el = new ProviderComponent()
-      el.appendChild(grandfatherEl)
-      rootEl.appendChild(el)
-    })
-
     test('should provide contexts to child element', async () => {
-      const childEl = new ConsumerComponent()
-      parentEl.appendChild(childEl)
-      await Promise.resolve()
-      expect(childEl.valueContext).toBe('value')
-      expect(childEl.propertyContext).toBe('test')
-      expect(childEl.shorthandContext).toBe('xxx')
+      expect(parentEl.valueContext).toBe('value')
+      expect(parentEl.propertyContext).toBe('test')
+      expect(parentEl.shorthandContext).toBe('xxx')
     })
 
     test('should update contexts in child element when calling updateProvidedContext', async () => {
-      const childEl = new ConsumerComponent()
-      parentEl.appendChild(childEl)
-      await Promise.resolve()
-      el.updateProvidedContext('valueContext', 1)
-      expect(childEl.valueContext).toBe(1)
+      grandfatherEl.updateProvidedContext('valueContext', 1)
+      expect(parentEl.valueContext).toBe(1)
     })
   })
 })
