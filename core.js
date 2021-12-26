@@ -38,14 +38,14 @@ function removeOrphan(el, name) {
   }
 }
 
-function sendContextEvent(el, name, setter, arg) {
-  const event = new CustomEvent(`context-request-${name}`, {
+function sendContextEvent(consumer, context, setter, arg) {
+  const event = new CustomEvent(`context-request-${context}`, {
     detail: { setter, arg },
     bubbles: true,
     cancelable: true,
     composed: true,
   })
-  el.dispatchEvent(event)
+  consumer.dispatchEvent(event)
   return event
 }
 
@@ -61,57 +61,77 @@ function createContext(name) {
   }
 }
 
-function registerContext(el, name, initialValue) {
+function registerContext(provider, context, initialValue) {
   const observerMap =
-    el.__wcContextObserverMap || (el.__wcContextObserverMap = {})
+    provider.__wcContextObserverMap || (provider.__wcContextObserverMap = {})
   const providedContexts =
-    el.__wcContextProvided || (el.__wcContextProvided = {})
-  providedContexts[name] = initialValue
-  const observers = observerMap[name] || (observerMap[name] = [])
-  const orphans = orphanMap[name]
-  el.addEventListener(`context-request-${name}`, (event) => {
+    provider.__wcContextProvided || (provider.__wcContextProvided = {})
+  providedContexts[context] = initialValue
+  const observers = observerMap[context] || (observerMap[context] = [])
+  const orphans = orphanMap[context]
+  provider.addEventListener(`context-request-${context}`, (event) => {
     event.stopPropagation()
-    const targetEl = event.target
-    const value = providedContexts[name]
+    const consumer = event.target
+    const value = providedContexts[context]
     const { setter, arg } = event.detail
-    setter(targetEl, value, arg)
-    observers.push({ targetEl, setter, arg })
-    event.detail.provider = el
+    setter(consumer, value, arg)
+    observers.push({ consumer, setter, arg })
+    event.detail.provider = provider
   })
   if (orphans && orphans.size) {
-    orphanResolveQueue.add(name)
+    orphanResolveQueue.add(context)
   }
 }
 
-function contextSetter(targetEl, value, name) {
-  const oldValue = targetEl[name]
+function updateContext(provider, context, value) {
+  const observerMap = provider.__wcContextObserverMap
+  const providedContexts = provider.__wcContextProvided
+  if (providedContexts) {
+    providedContexts[context] = value
+  }
+
+  const observers = observerMap && observerMap[context]
+  if (observers) {
+    observers.forEach(({ consumer, setter, arg }) => {
+      setter(consumer, value, arg)
+    })
+  }
+}
+
+function contextSetter(consumer, value, name) {
+  const oldValue = consumer[name]
   if (oldValue !== value) {
-    targetEl[name] = value
-    if (typeof targetEl.contextChangedCallback === 'function') {
-      targetEl.contextChangedCallback(name, oldValue, value)
+    consumer[name] = value
+    if (typeof consumer.contextChangedCallback === 'function') {
+      consumer.contextChangedCallback(name, oldValue, value)
     }
   }
 }
 
-function observeContext(el, name, setter = contextSetter, setterArg = name) {
-  const event = sendContextEvent(el, name, setter, setterArg)
+function observeContext(
+  consumer,
+  context,
+  setter = contextSetter,
+  setterArg = context
+) {
+  const event = sendContextEvent(consumer, context, setter, setterArg)
   const provider = event.detail.provider
   if (provider) {
     const providerMap =
-      el.__wcContextProviderMap || (el.__wcContextProviderMap = {})
-    providerMap[name] = provider
+      consumer.__wcContextProviderMap || (consumer.__wcContextProviderMap = {})
+    providerMap[context] = provider
   } else {
-    addOrphan(el, name, setter, setterArg)
+    addOrphan(consumer, context, setter, setterArg)
   }
 }
 
-function removeObserver(provider, name, consumer) {
+function removeObserver(provider, context, consumer) {
   if (provider) {
     const observerMap = provider.__wcContextObserverMap
     if (observerMap) {
-      const observers = observerMap[name]
+      const observers = observerMap[context]
       const consumerIndex = observers.findIndex(
-        (observer) => observer.targetEl === consumer
+        (observer) => observer.consumer === consumer
       )
       if (consumerIndex !== -1) {
         observers.splice(consumerIndex, 1)
@@ -120,35 +140,20 @@ function removeObserver(provider, name, consumer) {
   }
 }
 
-function unobserveContext(el, name) {
-  const providerMap = el.__wcContextProviderMap
+function unobserveContext(consumer, context) {
+  const providerMap = consumer.__wcContextProviderMap
   if (providerMap) {
-    removeObserver(providerMap[name], name, el)
+    removeObserver(providerMap[context], context, consumer)
   }
 
-  removeOrphan(el, name)
-}
-
-function updateContext(el, name, value) {
-  const observerMap = el.__wcContextObserverMap
-  const providedContexts = el.__wcContextProvided
-  if (providedContexts) {
-    providedContexts[name] = value
-  }
-
-  const observers = observerMap && observerMap[name]
-  if (observers) {
-    observers.forEach(({ targetEl, setter, arg }) => {
-      setter(targetEl, value, arg)
-    })
-  }
+  removeOrphan(consumer, context)
 }
 
 export {
   createContext,
   registerContext,
+  updateContext,
   observeContext,
   unobserveContext,
-  updateContext,
   contextSetter,
 }
