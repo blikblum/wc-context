@@ -177,6 +177,36 @@ describe('context', () => {
     })
   })
 
+  describe('when registered in a node with a custom getter', () => {
+    let getter
+    beforeEach(() => {
+      getter = jest.fn()
+      registerContext(grandfatherEl, 'key', 'value', getter)
+    })
+
+    test('should call the getter with payload when observed by a child', () => {
+      expect(getter).toHaveBeenCalledTimes(0)
+      observeContext(parentEl, 'key')
+      expect(getter).toHaveBeenCalledTimes(1)
+      expect(getter).toHaveBeenCalledWith(grandfatherEl, 'value')
+    })
+
+    test('should call the getter with payload when context is updated', () => {
+      expect(getter).toHaveBeenCalledTimes(0)
+      observeContext(parentEl, 'key')
+      expect(getter).toHaveBeenCalledTimes(1)
+      updateContext(grandfatherEl, 'key', 'value2')
+      expect(getter).toHaveBeenCalledTimes(2)
+      expect(getter).toHaveBeenCalledWith(grandfatherEl, 'value')
+    })
+
+    test('should update the consumer with the value returned by getter', () => {
+      getter.mockReturnValue(1)
+      observeContext(parentEl, 'key')
+      expect(parentEl.key).toBe(1)
+    })
+  })
+
   describe('when registered in a node with identifier returned by createContext', () => {
     let ctx
     beforeEach(() => {

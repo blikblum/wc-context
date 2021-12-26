@@ -63,18 +63,23 @@ function createContext(name) {
   }
 }
 
-function registerContext(provider, context, initialValue) {
+function providerGetter(provider, payload) {
+  return payload
+}
+
+function registerContext(provider, context, payload, getter = providerGetter) {
   const observerMap =
     provider.__wcContextObserverMap || (provider.__wcContextObserverMap = {})
   const providedContexts =
     provider.__wcContextProvided || (provider.__wcContextProvided = {})
-  providedContexts[context] = initialValue
+  providedContexts[context] = { getter, payload }
   const observers = observerMap[context] || (observerMap[context] = [])
   const orphans = orphanMap[context]
   provider.addEventListener(`context-request-${context}`, (event) => {
     event.stopPropagation()
     const consumer = event.target
-    const value = providedContexts[context]
+    const { getter, payload: getterPayload } = providedContexts[context]
+    const value = getter(provider, getterPayload)
     const { setter, arg } = event.detail
     setter(consumer, value, arg)
     observers.push({ consumer, setter, arg })
@@ -88,9 +93,15 @@ function registerContext(provider, context, initialValue) {
 function updateContext(provider, context, value) {
   const observerMap = provider.__wcContextObserverMap
   const providedContexts = provider.__wcContextProvided
-  if (providedContexts) {
-    providedContexts[context] = value
+  const providedContext = providedContexts && providedContexts[context]
+
+  if (value !== undefined) {
+    providedContext.payload = value
   }
+
+  const { getter, payload } = providedContext
+
+  value = getter(provider, payload)
 
   const observers = observerMap && observerMap[context]
   if (observers) {
