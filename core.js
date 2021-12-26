@@ -95,6 +95,12 @@ function updateContext(provider, context, value) {
   const providedContexts = provider.__wcContextProvided
   const providedContext = providedContexts && providedContexts[context]
 
+  if (!providedContext) {
+    throw new Error(
+      `updateContext: "${context.name || context}" is not registered`
+    )
+  }
+
   if (value !== undefined) {
     providedContext.payload = value
   }

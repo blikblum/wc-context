@@ -82,6 +82,16 @@ describe('context', () => {
       expect(childEl.otherProp).toBe('value')
     })
 
+    test('should throw when tryin to update a not registered context', () => {
+      expect(() => {
+        updateContext(grandfatherEl, 'key2')
+      }).toThrow('updateContext: "key2" is not registered')
+      expect(() => {
+        const ctx = createContext('hello')
+        updateContext(grandfatherEl, ctx)
+      }).toThrow('updateContext: "hello" is not registered')
+    })
+
     describe('and registered to a child node', () => {
       beforeEach(() => {
         registerContext(parentEl, 'key', 'value2')
