@@ -1,20 +1,12 @@
-import { html } from 'lit-element'
+import { html } from 'lit'
 import { styles } from './styles.js'
 import { Component } from './component.js'
 
-class ThemeProvider extends Component {
-  static get properties() {
-    return {
-      theme: { type: String },
-      alttheme: { type: String },
-      activeTheme: { type: String },
-    }
-  }
-
-  static get providedContexts() {
-    return {
-      theme: { property: 'activeTheme' },
-    }
+class ThemeSwitcher extends Component {
+  static properties = {
+    theme: { type: String },
+    alttheme: { type: String },
+    activeTheme: { type: String },
   }
 
   toggleTheme() {
@@ -31,20 +23,31 @@ class ThemeProvider extends Component {
 
   render() {
     return html`
-      <button @click=${this.toggleTheme}>toggle theme</button>
-      <slot></slot>
+      <theme-provider id=${this.id} theme=${this.activeTheme}>
+        <button @click=${this.toggleTheme}>toggle theme</button>
+        <slot />
+      </theme-provider>
     `
   }
 }
 
-class ThemeConsumer extends Component {
-  static get observedContexts() {
-    return ['theme']
+class ThemeProvider extends Component {
+  static properties = {
+    theme: { type: String, providedContext: 'theme' },
   }
+
+  render() {
+    return html`<slot />`
+  }
+}
+
+class ThemeConsumer extends Component {
+  static observedContexts = ['theme']
 
   contextChangedCallback(name, oldValue, value) {
     console.log(
       this.constructor.name,
+      `(${this.id}) `,
       `context "${name}" changed from "${oldValue}" to "${value}"`
     )
     this.requestUpdate()
@@ -56,27 +59,17 @@ class ThemeConsumer extends Component {
 }
 
 class TitleProvider extends Component {
-  static get properties() {
-    return {
-      value: { type: String },
-    }
-  }
-
-  static get providedContexts() {
-    return {
-      title: { property: 'value' },
-    }
+  static properties = {
+    value: { type: String, providedContext: 'title' },
   }
 
   render() {
-    return html`<slot></slot>`
+    return html`<slot />`
   }
 }
 
 class TitleThemeConsumer extends Component {
-  static get observedContexts() {
-    return ['title', 'theme']
-  }
+  static observedContexts = ['title', 'theme']
 
   contextChangedCallback(name, oldValue, value) {
     console.log(
@@ -95,47 +88,46 @@ class TitleThemeConsumer extends Component {
 }
 
 class App extends Component {
-  static get properties() {
-    return {
-      state: { type: Object },
-    }
+  static properties = {
+    state: { type: Object },
   }
+
   constructor() {
     super()
     this.state = { title: 'one title' }
-    this.toggleTitle = () => {
-      this.state = {
-        ...this.state,
-        ...{
-          title:
-            this.state.title === 'one title' ? 'another title' : 'one title',
-        },
-      }
-    }
   }
 
+  toggleTitle() {
+    this.state = {
+      ...this.state,
+      ...{
+        title: this.state.title === 'one title' ? 'another title' : 'one title',
+      },
+    }
+  }
   render() {
     return html`
       <div>
-        <theme-provider>
-          <theme-consumer></theme-consumer>
-        </theme-provider>
-        <theme-provider>
-          <theme-provider theme="blue" alttheme="yellow">
-            <theme-consumer></theme-consumer>
-          </theme-provider>
-        </theme-provider>
-        <theme-provider>
+        <theme-switcher id="p1">
+          <theme-consumer id="c1"></theme-consumer>
+        </theme-switcher>
+        <theme-switcher id="p2">
+          <theme-switcher id="p3" theme="blue" alttheme="yellow">
+            <theme-consumer id="c2"></theme-consumer>
+          </theme-switcher>
+        </theme-switcher>
+        <theme-switcher id="p4">
           <title-provider value=${this.state.title}>
             <titletheme-consumer></titletheme-consumer>
           </title-provider>
-        </theme-provider>
+        </theme-switcher>
         <button @click=${this.toggleTitle}>Toggle title</button>
       </div>
     `
   }
 }
 
+customElements.define('theme-switcher', ThemeSwitcher)
 customElements.define('theme-provider', ThemeProvider)
 customElements.define('theme-consumer', ThemeConsumer)
 customElements.define('title-provider', TitleProvider)
