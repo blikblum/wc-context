@@ -1,6 +1,6 @@
 import { registerContext, updateContext } from './core.js'
 
-function getInstanceValue(provider, instance) {
+function getFromValue(host, instance) {
   if (!instance._initialized) {
     instance.initialize()
     instance._initialized = true
@@ -8,13 +8,17 @@ function getInstanceValue(provider, instance) {
   return instance._value
 }
 
-export class ContextProvider {
-  constructor(provider, context, initialValue) {
-    this.provider = provider
+class ContextProvider {
+  constructor(host, context, initialValue) {
+    if (typeof host.addController === 'function') {
+      host.addController(this)
+    }
+    this.host = host
     this.context = context
     this._value = initialValue
     this._initialized = false
-    registerContext(provider, context, this, getInstanceValue)
+    this._finalized = false
+    registerContext(host, context, this, getFromValue)
   }
 
   get value() {
@@ -23,17 +27,36 @@ export class ContextProvider {
 
   set value(value) {
     this._value = value
-    updateContext(this.provider, this.context)
+    updateContext(this.host, this.context)
   }
 
-  dispose() {
+  connect() {
+    if (this._finalized) {
+      this.initialize()
+      this._finalized = false
+      this._initialized = true
+    }
+  }
+
+  disconnect() {
     if (this._initialized) {
       this._initialized = false
+      this._finalized = true
       this.finalize()
     }
+  }
+
+  hostConnected() {
+    this.connect()
+  }
+
+  hostDisconnected() {
+    this.disconnect()
   }
 
   initialize() {}
 
   finalize() {}
 }
+
+export { ContextProvider }
