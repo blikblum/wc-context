@@ -64,7 +64,7 @@ const withContext = (Base) => {
     }
 
     connectedCallback() {
-      super.connectedCallback && super.connectedCallback()
+      super.connectedCallback()
       const observedContexts = this.constructor.observedContexts
       if (observedContexts) {
         observedContexts.forEach((context) => {
@@ -78,7 +78,7 @@ const withContext = (Base) => {
     }
 
     disconnectedCallback() {
-      super.disconnectedCallback && super.disconnectedCallback()
+      super.disconnectedCallback()
       const observedContexts = this.constructor.observedContexts
       if (observedContexts) {
         observedContexts.forEach((context) => {
