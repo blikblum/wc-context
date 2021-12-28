@@ -20,12 +20,16 @@
   "files": [
     "core.js",
     "lit-element.js",
+    "lit.js",
     "wc-context.js"
   ],
   "jest": {
     "modulePathIgnorePatterns": [
       "<rootDir>/dist/",
       "<rootDir>/examples/"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(lit|@lit|lit-html|lit-element)/)"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/test/setup.js"
@@ -48,8 +52,8 @@
     "prettier": "^2.5.1"
   },
   "scripts": {
-    "format": "prettier lit-element.js wc-context.js core.js test --write",
-    "lint": "eslint lit-element.js wc-context.js core.js test",
+    "format": "prettier lit-element.js lit.js wc-context.js core.js test --write",
+    "lint": "eslint lit-element.js lit.js wc-context.js core.js test",
     "start": "web-dev-server --open examples/ --node-resolve",
     "start:watch": "web-dev-server --open examples/ --node-resolve --watch",
     "test": "jest",
