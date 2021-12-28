@@ -12,8 +12,8 @@ const orphanResolveQueue = {
       resolved.then(() => {
         this.contexts.forEach((context) => {
           const orphans = orphanMap[context]
-          orphans.forEach(({ setter, arg }, orphan) => {
-            const event = sendContextEvent(orphan, context, setter, arg)
+          orphans.forEach(({ setter, payload }, orphan) => {
+            const event = sendContextEvent(orphan, context, payload, setter)
             const provider = event.detail.provider
             if (provider) {
               orphans.delete(orphan)
@@ -28,9 +28,9 @@ const orphanResolveQueue = {
   },
 }
 
-function addOrphan(el, name, setter, arg) {
+function addOrphan(el, name, payload, setter) {
   const orphans = orphanMap[name] || (orphanMap[name] = new Map())
-  orphans.set(el, { setter, arg })
+  orphans.set(el, { setter, payload })
 }
 
 function removeOrphan(el, name) {
@@ -40,9 +40,9 @@ function removeOrphan(el, name) {
   }
 }
 
-function sendContextEvent(consumer, context, setter, arg) {
+function sendContextEvent(consumer, context, payload, setter) {
   const event = new CustomEvent(`context-request-${context}`, {
-    detail: { setter, arg },
+    detail: { setter, payload },
     bubbles: true,
     cancelable: true,
     composed: true,
@@ -83,9 +83,9 @@ function registerContext(provider, context, payload, getter = providerGetter) {
     event.stopPropagation()
     const consumer = event.target
     const value = getProviderValue(provider, providedContexts[context])
-    const { setter, arg } = event.detail
-    setter(consumer, value, arg)
-    observers.push({ consumer, setter, arg })
+    const { setter, payload } = event.detail
+    setter(consumer, value, payload)
+    observers.push({ consumer, setter, payload })
     event.detail.provider = provider
   })
   if (orphans && orphans.size) {
@@ -112,13 +112,13 @@ function updateContext(provider, context, payload) {
 
   const observers = observerMap && observerMap[context]
   if (observers) {
-    observers.forEach(({ consumer, setter, arg }) => {
-      setter(consumer, value, arg)
+    observers.forEach(({ consumer, setter, payload }) => {
+      setter(consumer, value, payload)
     })
   }
 }
 
-function contextSetter(consumer, value, name) {
+function consumerSetter(consumer, value, name) {
   const oldValue = consumer[name]
   if (oldValue !== value) {
     consumer[name] = value
@@ -137,15 +137,15 @@ function registerProvider(consumer, context, provider) {
 function observeContext(
   consumer,
   context,
-  setter = contextSetter,
-  setterArg = context
+  payload = context,
+  setter = consumerSetter
 ) {
-  const event = sendContextEvent(consumer, context, setter, setterArg)
+  const event = sendContextEvent(consumer, context, payload, setter)
   const provider = event.detail.provider
   if (provider) {
     registerProvider(consumer, context, provider)
   } else {
-    addOrphan(consumer, context, setter, setterArg)
+    addOrphan(consumer, context, payload, setter)
   }
 }
 
@@ -179,5 +179,6 @@ export {
   updateContext,
   observeContext,
   unobserveContext,
-  contextSetter,
+  consumerSetter,
+  providerGetter,
 }

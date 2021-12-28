@@ -5,7 +5,6 @@ import {
   unobserveContext,
   updateContext,
   createContext,
-  contextSetter,
 } from '../core'
 
 describe('context', () => {
@@ -78,7 +77,7 @@ describe('context', () => {
         el[arg] = value
       }
 
-      observeContext(childEl, 'key', setElProperty, 'otherProp')
+      observeContext(childEl, 'key', 'otherProp', setElProperty)
       expect(childEl.otherProp).toBe('value')
     })
 
@@ -225,22 +224,22 @@ describe('context', () => {
     })
 
     test('should be acessible in all children nodes', () => {
-      observeContext(parentEl, ctx, contextSetter, 'key')
-      observeContext(childEl, ctx, contextSetter, 'key')
+      observeContext(parentEl, ctx, 'key')
+      observeContext(childEl, ctx, 'key')
       expect(parentEl.key).toBe('value')
       expect(childEl.key).toBe('value')
     })
 
     test('should not be acessible in parent nodes', () => {
-      observeContext(rootEl, ctx, contextSetter, 'key')
+      observeContext(rootEl, ctx, 'key')
 
       expect(rootEl.key).toBeUndefined()
     })
 
     test('should not be acessible in sibling nodes', () => {
-      observeContext(grandfather2El, ctx, contextSetter, 'key')
+      observeContext(grandfather2El, ctx, 'key')
 
-      observeContext(child3El, ctx, contextSetter, 'key')
+      observeContext(child3El, ctx, 'key')
       expect(grandfather2El.key).toBeUndefined()
       expect(child3El.key).toBeUndefined()
     })
@@ -253,7 +252,7 @@ describe('context', () => {
       })
 
       test('should not override parent context', () => {
-        observeContext(childEl, ctx, contextSetter, 'key')
+        observeContext(childEl, ctx, 'key')
         expect(childEl.key).toBe('value')
       })
     })
