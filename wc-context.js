@@ -19,22 +19,31 @@ const withContext = (Base) => {
       if (providedContexts) {
         Object.keys(providedContexts).forEach((name) => {
           const config = providedContexts[name]
-
           registerContext(this, name, config, getWithConfig)
         })
       }
     }
 
     updateProvidedContext(name, value) {
-      const config = value !== undefined ? { value } : undefined
-      updateContext(this, name, config)
+      const providedContexts = this.constructor.providedContexts
+      if (providedContexts) {
+        const config = providedContexts[name]
+        const property = typeof config === 'string' ? config : config.property
+        updateContext(this, name, property || { value })
+      }
     }
 
     connectedCallback() {
       super.connectedCallback && super.connectedCallback()
       const observedContexts = this.constructor.observedContexts
       if (observedContexts) {
-        observedContexts.forEach((context) => observeContext(this, context))
+        observedContexts.forEach((context) => {
+          if (Array.isArray(context)) {
+            observeContext(this, context[0], context[1])
+          } else {
+            observeContext(this, context)
+          }
+        })
       }
     }
 
@@ -42,7 +51,13 @@ const withContext = (Base) => {
       super.disconnectedCallback && super.disconnectedCallback()
       const observedContexts = this.constructor.observedContexts
       if (observedContexts) {
-        observedContexts.forEach((context) => unobserveContext(this, context))
+        observedContexts.forEach((context) => {
+          if (Array.isArray(context)) {
+            unobserveContext(this, context[0])
+          } else {
+            unobserveContext(this, context)
+          }
+        })
       }
     }
   }

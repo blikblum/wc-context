@@ -19,6 +19,7 @@ const ConsumerComponent = class extends Component {
     'valueContext',
     'propertyContext',
     'shorthandContext',
+    ['propertyContext', 'localPropertyContext'],
   ]
 }
 
@@ -53,6 +54,7 @@ describe('withContext', () => {
       expect(parentEl.valueContext).toBe('value')
       expect(parentEl.propertyContext).toBe('test')
       expect(parentEl.shorthandContext).toBe('xxx')
+      expect(parentEl.localPropertyContext).toBe('test')
     })
 
     test('should update contexts in child element when calling updateProvidedContext', async () => {
