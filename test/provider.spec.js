@@ -39,6 +39,11 @@ describe('ContextProvider', () => {
     expect(parentEl.key).toBe('value')
   })
 
+  it('should return initial value in value property', () => {
+    const provider = new ContextProvider(grandfatherEl, 'key', 'value')
+    expect(provider.value).toBe('value')
+  })
+
   it('should update context when value property is set', () => {
     const provider = new ContextProvider(grandfatherEl, 'key', 'value')
     observeContext(parentEl, 'key')
