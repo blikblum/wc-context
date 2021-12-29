@@ -24,7 +24,7 @@ const withContext = (Base) => {
       }
     }
 
-    updateProvidedContext(name, value) {
+    updateContext(name, value) {
       const providedContexts = this.constructor.providedContexts
       if (providedContexts) {
         const config = providedContexts[name]

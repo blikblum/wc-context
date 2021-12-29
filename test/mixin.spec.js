@@ -44,9 +44,9 @@ describe('withContext', () => {
     parentEl = document.getElementById('parent')
   })
 
-  test('should define a updateProvidedContext method in element', () => {
+  test('should define a updatContext method in element', () => {
     const el = new Component()
-    expect(el.updateProvidedContext).toBeInstanceOf(Function)
+    expect(el.updateContext).toBeInstanceOf(Function)
   })
 
   describe('with providedContexts static property', () => {
@@ -57,8 +57,8 @@ describe('withContext', () => {
       expect(parentEl.localPropertyContext).toBe('test')
     })
 
-    test('should update contexts in child element when calling updateProvidedContext', async () => {
-      grandfatherEl.updateProvidedContext('valueContext', 1)
+    test('should update contexts in child element when calling updateContext', async () => {
+      grandfatherEl.updateContext('valueContext', 1)
       expect(parentEl.valueContext).toBe(1)
     })
   })
