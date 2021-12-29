@@ -42,7 +42,7 @@ function removeOrphan(el, name) {
 
 function sendContextEvent(consumer, context, payload, setter) {
   const event = new CustomEvent(`context-request-${context}`, {
-    detail: { setter, payload },
+    detail: { setter, payload, consumer },
     bubbles: true,
     cancelable: true,
     composed: true,
@@ -81,9 +81,8 @@ function registerContext(provider, context, payload, getter = providerGetter) {
   const orphans = orphanMap[context]
   provider.addEventListener(`context-request-${context}`, (event) => {
     event.stopPropagation()
-    const consumer = event.target
     const value = getProviderValue(provider, providedContexts[context])
-    const { setter, payload } = event.detail
+    const { setter, payload, consumer } = event.detail
     setter(consumer, value, payload)
     observers.push({ consumer, setter, payload })
     event.detail.provider = provider

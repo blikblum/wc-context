@@ -1,10 +1,10 @@
 /* eslint-env jest */
 import { withContext } from '../lit.js'
-import { LitElement } from 'lit'
+import { LitElement, html } from 'lit'
 
 const Component = withContext(LitElement)
 
-const ProviderComponent = class extends Component {
+class ProviderComponent extends Component {
   static properties = {
     myProp: { providedContext: 'propertyContext' },
     myOtherProp: { providedContext: 'otherContext' },
@@ -17,7 +17,7 @@ const ProviderComponent = class extends Component {
   }
 }
 
-const ConsumerComponent = class extends Component {
+class ConsumerComponent extends Component {
   static properties = {
     myProp: { context: 'otherContext' },
   }
@@ -25,9 +25,29 @@ const ConsumerComponent = class extends Component {
   static observedContexts = ['propertyContext']
 }
 
+class NestedComponent extends Component {
+  static properties = {
+    myProp: { providedContext: 'propertyContext' },
+  }
+
+  constructor() {
+    super()
+    this.myProp = 'test'
+  }
+
+  get consumerEl() {
+    return this.renderRoot.querySelector('lit-consumer')
+  }
+
+  render() {
+    return html`<lit-consumer></lit-consumer>`
+  }
+}
+
 customElements.define('lit-component', Component)
 customElements.define('lit-provider', ProviderComponent)
 customElements.define('lit-consumer', ConsumerComponent)
+customElements.define('lit-nested', NestedComponent)
 
 // unable to create custom elements with jsdom
 describe('withContext', () => {
@@ -40,6 +60,7 @@ describe('withContext', () => {
           <lit-consumer id="parent"></lit-consumer>
           <div id="parent2"></div>
         </lit-provider>
+        <lit-nested></lit-nested>
       </div>
     `
     grandfatherEl = document.getElementById('grandfather')
@@ -50,6 +71,12 @@ describe('withContext', () => {
     test('should provide contexts to child element', async () => {
       expect(parentEl.propertyContext).toBe('test')
       expect(parentEl.myProp).toBe('xxx')
+    })
+
+    test('should provide contexts to child element inside shadow dom', async () => {
+      const nestedEl = document.querySelector('lit-nested')
+      await nestedEl.updateComplete
+      expect(nestedEl.consumerEl.propertyContext).toBe('test')
     })
 
     test('should update contexts in child element when updating providedContext property', async () => {
