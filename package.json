@@ -38,12 +38,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",
-    "@babel/plugin-proposal-class-properties": "^7.16.5",
-    "@babel/plugin-proposal-decorators": "^7.16.5",
-    "@babel/preset-env": "^7.16.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.16.5",
     "@web/dev-server": "^0.1.28",
-    "babel-jest": "^27.4.5",
-    "document-register-element": "^1.14.10",
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
     "jest": "^27.4.5",
