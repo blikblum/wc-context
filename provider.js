@@ -2,8 +2,8 @@ import { registerContext, updateContext } from './core.js'
 
 function getFromValue(host, instance) {
   if (!instance._initialized) {
-    instance.initialize()
     instance._initialized = true
+    instance.initialize()
   }
   return instance._value
 }
