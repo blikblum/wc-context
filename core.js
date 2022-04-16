@@ -85,6 +85,7 @@ function registerContext(provider, context, payload, getter = providerGetter) {
     const { setter, payload, consumer } = event.detail
     setter(consumer, value, payload)
     observers.push({ consumer, setter, payload })
+    runListeners(provider, context, 'observe', observers.length)
     event.detail.provider = provider
   })
   if (orphans && orphans.size) {
@@ -92,16 +93,20 @@ function registerContext(provider, context, payload, getter = providerGetter) {
   }
 }
 
-function updateContext(provider, context, payload) {
-  const observerMap = provider.__wcContextObserverMap
+function getProvidedContext(provider, context, caller) {
   const providedContexts = provider.__wcContextProvided
   const providedContext = providedContexts && providedContexts[context]
 
   if (!providedContext) {
-    throw new Error(
-      `updateContext: "${context.name || context}" is not registered`
-    )
+    throw new Error(`${caller}: "${context.name || context}" is not registered`)
   }
+
+  return providedContext
+}
+
+function updateContext(provider, context, payload) {
+  const observerMap = provider.__wcContextObserverMap
+  const providedContext = getProvidedContext(provider, context, 'updateContext')
 
   if (payload !== undefined) {
     providedContext.payload = payload
@@ -116,13 +121,25 @@ function updateContext(provider, context, payload) {
     })
   }
 }
-
 function consumerSetter(consumer, value, name) {
   const oldValue = consumer[name]
   if (oldValue !== value) {
     consumer[name] = value
     if (typeof consumer.contextChangedCallback === 'function') {
       consumer.contextChangedCallback(name, oldValue, value)
+    }
+  }
+}
+
+function runListeners(provider, context, type, count) {
+  const providedContext = getProvidedContext(provider, context, 'runListeners')
+
+  const listeners = providedContext.listeners
+  if (listeners) {
+    for (const listener of listeners) {
+      if (listener.type === type) {
+        listener.callback.call(provider, { count })
+      }
     }
   }
 }
@@ -159,6 +176,7 @@ function removeObserver(provider, context, consumer) {
       if (consumerIndex !== -1) {
         observers.splice(consumerIndex, 1)
       }
+      runListeners(provider, context, 'unobserve', observers.length)
     }
   }
 }
@@ -172,6 +190,29 @@ function unobserveContext(consumer, context) {
   removeOrphan(consumer, context)
 }
 
+function onContextObserve(provider, context, callback) {
+  const providedContext = getProvidedContext(
+    provider,
+    context,
+    'onContextObserve'
+  )
+  const listeners =
+    providedContext.listeners || (providedContext.listeners = [])
+  listeners.push({ callback, type: 'observe' })
+}
+
+function onContextUnobserve(provider, context, callback) {
+  const providedContext = getProvidedContext(
+    provider,
+    context,
+    'onContextUnobserve'
+  )
+
+  const listeners =
+    providedContext.listeners || (providedContext.listeners = [])
+  listeners.push({ callback, type: 'unobserve' })
+}
+
 export {
   createContext,
   registerContext,
@@ -180,4 +221,6 @@ export {
   unobserveContext,
   consumerSetter,
   providerGetter,
+  onContextObserve,
+  onContextUnobserve,
 }

@@ -5,6 +5,8 @@ import {
   unobserveContext,
   updateContext,
   createContext,
+  onContextObserve,
+  onContextUnobserve,
 } from '../core'
 
 describe('context', () => {
@@ -182,6 +184,50 @@ describe('context', () => {
         callback.mockClear()
         updateContext(grandfatherEl, 'key', 'value')
         expect(callback).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('and a observe listener is registered with onContextObserve', () => {
+      let callback
+      beforeEach(() => {
+        callback = jest.fn()
+
+        onContextObserve(grandfatherEl, 'key', callback)
+      })
+
+      test('should call listener callback when a context is observed', () => {
+        observeContext(childEl, 'key')
+        expect(callback).toHaveBeenCalledTimes(1)
+        expect(callback).toHaveBeenCalledWith({ count: 1 })
+      })
+
+      test('should not call listener callback when a context is unobserved', () => {
+        observeContext(childEl, 'key')
+        callback.mockClear()
+        unobserveContext(childEl, 'key')
+        expect(callback).toHaveBeenCalledTimes(0)
+      })
+    })
+
+    describe('and a unobserve listener is registered with onContextUnobserve', () => {
+      let callback
+      beforeEach(() => {
+        callback = jest.fn()
+
+        onContextUnobserve(grandfatherEl, 'key', callback)
+      })
+
+      test('should not call listener callback when a context is observed', () => {
+        observeContext(childEl, 'key')
+        expect(callback).toHaveBeenCalledTimes(0)
+      })
+
+      test('should call listener callback when a context is unobserved', () => {
+        observeContext(childEl, 'key')
+        callback.mockClear()
+        unobserveContext(childEl, 'key')
+        expect(callback).toHaveBeenCalledTimes(1)
+        expect(callback).toHaveBeenCalledWith({ count: 0 })
       })
     })
   })
