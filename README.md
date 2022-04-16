@@ -4,26 +4,36 @@
 
 ### Features
 
-&nbsp; &nbsp; ✓ Small, fast and flexible<br>
-&nbsp; &nbsp; ✓ No need to dedicated "provider" or "consumer" elements<br>
+&nbsp; &nbsp; ✓ Small and fast. No Internet Explorer support<br>
+&nbsp; &nbsp; ✓ Flexible ways to define context providers and consumers<br>
 &nbsp; &nbsp; ✓ Ability to provide or consume one or more contexts per element<br>
 &nbsp; &nbsp; ✓ Context can be provided or consumed by any HTML element<br>
 &nbsp; &nbsp; ✓ Context can be identified by string or unique identifier<br>
 &nbsp; &nbsp; ✓ Easy to implement unit tests (same as components without context)<br>
 &nbsp; &nbsp; ✓ Builtin integration with LitElement<br>
-&nbsp; &nbsp; ✓ Builtin ContextProvider class with primitives for lazy loading<br>
-&nbsp; &nbsp; ✓ No Internet Explorer support<br>
+&nbsp; &nbsp; ✓ Builtin ContextProvider ([Reactive Controller](https://lit.dev/docs/composition/controllers/)) with primitives for lazy loading<br>
+&nbsp; &nbsp; ✓ Builtin context-provider and context-consumer elements<br>
 
 ### Live examples
 
-- lit: [version 1](https://codesandbox.io/s/8n89qz95q2) /
+- Lit integration: [version 1](https://codesandbox.io/s/8n89qz95q2) /
   [version 2](https://codesandbox.io/s/wq6jyo3jvw)
+
+### Usage
+
+Context can be identified by string or an unique identifier returned by a call to `createContext`
+
+```javascript
+import { createContext } from 'wc-context'
+
+const themeContext = createContext('theme') // or just a string like 'theme'
+```
+
+To define how a context is provided or consumed, use one of the methods described below. It is possible to mix different methods. For example, a context provided using Lit integration can be consumed by a dedicated custom element and vice versa.
 
 ### Lit integration
 
 The easiest way to use `wc-context` is with the Lit integration exported in the lit namespace (`wc-context/lit`). It provides a `withContext` class mixin that hooks into the property reactivity system allowing to define context using the property declaration. The context is automatically propagated when the property is updated.
-
-See below for the generic implementation that works with any web component, declared with library or not.
 
 #### Providing a context
 
@@ -69,11 +79,13 @@ class Consumer extends withContext(LitElement) {
 }
 ```
 
-### Generic implementation
+### Custom elements integration
 
 The `withContext` class mixin exported in the root namespace, implements an API similar to DOM `observedAttributes`/`attributeChangedCallback`.
 
 Contexts are defined in an custom element through static `providedContexts` field where the key is the context name and value holds a configuration object. The configuration can have a `value` property defining the default context value or a `property` one defining from what component property the context will retrieve its value.
+
+> This mixin can be used in any web component including the created with Lit or other libraries
 
 #### Providing a context
 
@@ -125,102 +137,22 @@ class Consumer extends withContext(HTMLElement) {
 }
 ```
 
-#### Low level API
+### Dedicated custom elements
 
-`wc-context` also exports its low level functions that can be used to handle specific cases or create a new interface as for example generic provider and consumer elements implemented below.
+The `context-provider` and `context-consumer` custom elements allows to provide and consume contexts declaratively.
+
+In both elements, the `key` attribute / property defines the context. Setting the `value` property of `context-provider` will change the context value propagating to `context-consumer` `value` property (or any other context consumer)
+
+An `context-update` event is triggered on `context-consumer` when context value changes
 
 ```javascript
-import {
-  registerContext,
-  updateContext,
-  observeContext,
-  unobserveContext,
-} from 'wc-context/core'
+import 'wc-context/context-provider.js'
+import 'wc-context/context-consumer.js'
 
-// custom element that publishes an arbitrary context name and value
-
-function getFromProperty(provider, prop) {
-  return provider[prop]
-}
-
-class ContextProvider extends HTMLElement {
-  static get observedAttributes() {
-    return ['name', 'value']
-  }
-
-  get name() {
-    return this._name
-  }
-
-  set name(value) {
-    if (!this._name && value) {
-      // register context once
-      registerContext(this, this.name, 'value', getFromProperty)
-    }
-    this._name = value
-  }
-
-  attributeChangedCallback(name, oldValue, value) {
-    this[name] = value
-  }
-
-  set value(val) {
-    this._value = val
-    if (this.name) {
-      updateContext(this, this.name)
-    }
-  }
-
-  get value() {
-    return this._value
-  }
-}
-
-customElements.define('context-provider', ContextProvider)
-
-class ContextUpdateEvent extends Event {
-  constructor(context, value) {
-    super('context-update', { bubbles: true })
-    this.context = context
-    this.value = value
-  }
-}
-
-function setValueDispatchEvent(consumer, value, context) {
-  consumer.value = value
-  consumer.dispatchEvent(new ContextUpdateEvent(context, value))
-}
-
-class ContextConsumer extends HTMLElement {
-  static get observedAttributes() {
-    return ['name']
-  }
-
-  attributeChangedCallback(name, oldValue, value) {
-    this[name] = value
-  }
-
-  connectedCallback() {
-    this._context = this.name
-    if (this._context) {
-      observeContext(this, this._context, this._context, setValueDispatchEvent)
-    }
-  }
-
-  disconnectedCallback() {
-    if (this._context) {
-      unobserveContext(this, this._context)
-    }
-  }
-}
-
-customElements.define('context-consumer', ContextConsumer)
-
-// later
 document.body.innerHTML = `
-<context-provider name="theme" value="light">
+<context-provider key="theme" value="light">
   <div>
-    <context-consumer name="theme"></context-consumer>
+    <context-consumer key="theme"></context-consumer>
   </div>
 </context-provider>`
 
@@ -234,7 +166,23 @@ consumer.addEventListener('context-update', ({ context, value }) => {
 provider.value = 'dark'
 ```
 
+### Low level API
+
+The low level functions are exported in `wc-context/core` and can be used to handle specific cases or create a new interface / integration.
+
+For example, is possible to provide a context in body element to be consumed anywhere in the page.
+
+```javascript
+import { registerContext, updateContext } from 'wc-context/core'
+
+registerContext(document.body, 'theme', 'light')
+
+document.querySelector('#theme-toggle-button').addEventListener('click', () => {
+  updateContext(document.body, 'theme', 'dark')
+})
+```
+
 ### License
 
 MIT
-Copyright © 2021 Luiz Américo Pereira Câmara
+Copyright © 2022 Luiz Américo Pereira Câmara
