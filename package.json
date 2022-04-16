@@ -1,6 +1,6 @@
 {
   "name": "wc-context",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Context for HTML custom elements / web components",
   "repository": "blikblum/wc-context",
   "author": "Luiz Américo Pereira Câmara",
@@ -18,6 +18,8 @@
   "main": "wc-context.js",
   "module": "wc-context.js",
   "files": [
+    "context-provider.js",
+    "context-consumer.js",
     "core.js",
     "lit-element.js",
     "lit.js",
