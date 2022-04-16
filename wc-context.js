@@ -3,6 +3,7 @@ import {
   unobserveContext,
   registerContext,
   updateContext,
+  createContext,
 } from './core.js'
 
 function getWithConfig(provider, config) {
@@ -63,4 +64,4 @@ const withContext = (Base) => {
   }
 }
 
-export { withContext }
+export { withContext, createContext }
