@@ -66,7 +66,7 @@ describe('ContextProvider', () => {
     expect(initialize).toHaveBeenCalledTimes(1)
   })
 
-  it('should call finalize once when disconnect is called after', () => {
+  it('should call finalize once when disconnect is called after initialized', () => {
     const finalize = jest.fn()
     class CustomProvider extends ContextProvider {
       finalize() {

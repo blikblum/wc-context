@@ -1,10 +1,6 @@
-import { registerContext, updateContext } from './core.js'
+import { onContextObserve, registerContext, updateContext } from './core.js'
 
 function getFromValue(host, instance) {
-  if (!instance._initialized) {
-    instance._initialized = true
-    instance.initialize()
-  }
   return instance._value
 }
 
@@ -19,6 +15,12 @@ class ContextProvider {
     this._initialized = false
     this._finalized = false
     registerContext(host, context, this, getFromValue)
+    onContextObserve(host, context, () => {
+      if (!this._initialized) {
+        this._initialized = true
+        this.initialize()
+      }
+    })
   }
 
   get value() {
