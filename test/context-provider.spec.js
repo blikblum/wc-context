@@ -29,12 +29,12 @@ describe('context-provider', () => {
             <div id="child2"></div>
           </div>
         </context-provider>
-        <context-provider id="grandfather2" key="key" value="value2">
+        <context-provider id="grandfather2" context="key" value="value2">
           <div id="parent3">
             <div id="child3"></div>
           </div>
         </context-provider>
-        <div id="grandfather3" key="key" value="value2">
+        <div id="grandfather3">
           <div id="parent4">
             <div id="child4"></div>
           </div>
@@ -53,7 +53,7 @@ describe('context-provider', () => {
 
   describe('when using a string as context key', () => {
     beforeEach(() => {
-      grandfatherEl.key = 'key'
+      grandfatherEl.context = 'key'
       grandfatherEl.value = 'value'
     })
 
@@ -152,7 +152,7 @@ describe('context-provider', () => {
     let ctx
     beforeEach(() => {
       ctx = createContext('myContext')
-      grandfatherEl.key = ctx
+      grandfatherEl.context = ctx
       grandfatherEl.value = 'value'
     })
 
@@ -173,7 +173,7 @@ describe('context-provider', () => {
       observeContext(grandfather2El, ctx, 'key')
 
       observeContext(child3El, ctx, 'key')
-      expect(grandfather3El.key).toBeUndefined()
+      expect(grandfather2El.key).toBeUndefined()
       expect(child3El.key).toBeUndefined()
     })
 

@@ -15,8 +15,8 @@ describe('context-consumer', () => {
     document.body.innerHTML = `
       <div id="root">
         <div id="grandfather">
-          <context-consumer id="parent" key="key">
-            <context-consumer id="child" key="key"></context-consumer>
+          <context-consumer id="parent" context="key">
+            <context-consumer id="child" context="key"></context-consumer>
           </context-consumer>
           <div id="parent2">
             <div id="child2"></div>

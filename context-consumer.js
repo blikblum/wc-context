@@ -15,7 +15,7 @@ function setValueDispatchEvent(consumer, value, context) {
 
 class ContextConsumer extends HTMLElement {
   static get observedAttributes() {
-    return ['key']
+    return ['context']
   }
 
   attributeChangedCallback(name, oldValue, value) {
@@ -23,7 +23,7 @@ class ContextConsumer extends HTMLElement {
   }
 
   connectedCallback() {
-    this._context = this.key
+    this._context = this.context
     if (this._context) {
       observeContext(this, this._context, this._context, setValueDispatchEvent)
     }

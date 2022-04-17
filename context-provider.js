@@ -8,18 +8,18 @@ function getFromProperty(provider, prop) {
 
 class ContextProvider extends HTMLElement {
   static get observedAttributes() {
-    return ['key', 'value']
+    return ['context', 'value']
   }
 
-  get key() {
-    return this._key
+  get context() {
+    return this._context
   }
 
-  set key(key) {
-    if (!this._key && key) {
+  set context(context) {
+    if (!this._context && context) {
       // register context once
-      this._key = key
-      registerContext(this, this._key, 'value', getFromProperty)
+      this._context = context
+      registerContext(this, this._context, 'value', getFromProperty)
     }
   }
 
@@ -29,8 +29,8 @@ class ContextProvider extends HTMLElement {
 
   set value(value) {
     this._value = value
-    if (this._key) {
-      updateContext(this, this._key)
+    if (this._context) {
+      updateContext(this, this._context)
     }
   }
 

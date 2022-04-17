@@ -1,6 +1,6 @@
 # wc-context
 
-> A context implementation for web components
+> A comprehensive context implementation for web components
 
 ### Features
 
@@ -9,7 +9,8 @@
 &nbsp; &nbsp; ✓ Ability to provide or consume one or more contexts per element<br>
 &nbsp; &nbsp; ✓ Context can be provided or consumed by any HTML element<br>
 &nbsp; &nbsp; ✓ Context can be identified by string or unique identifier<br>
-&nbsp; &nbsp; ✓ Easy to implement unit tests (same as components without context)<br>
+&nbsp; &nbsp; ✓ Works with shadow dom and slotted content (handles timing issues)<br>
+&nbsp; &nbsp; ✓ Easy to implement unit tests. Most of the time, same as components without context<br>
 &nbsp; &nbsp; ✓ Builtin integration with LitElement<br>
 &nbsp; &nbsp; ✓ Builtin ContextProvider ([Reactive Controller](https://lit.dev/docs/composition/controllers/)) with primitives for lazy loading<br>
 &nbsp; &nbsp; ✓ Builtin context-provider and context-consumer elements<br>
@@ -141,7 +142,7 @@ class Consumer extends withContext(HTMLElement) {
 
 The `context-provider` and `context-consumer` custom elements allows to provide and consume contexts declaratively.
 
-In both elements, the `key` attribute / property defines the context. Setting the `value` property of `context-provider` will change the context value propagating to `context-consumer` `value` property (or any other context consumer)
+In both elements, the `context` attribute / property defines the context. Setting the `value` property of `context-provider` will change the context value propagating to `context-consumer` `value` property (or any other context consumer)
 
 An `context-update` event is triggered on `context-consumer` when context value changes
 
@@ -150,9 +151,9 @@ import 'wc-context/context-provider.js'
 import 'wc-context/context-consumer.js'
 
 document.body.innerHTML = `
-<context-provider key="theme" value="light">
+<context-provider context="theme" value="light">
   <div>
-    <context-consumer key="theme"></context-consumer>
+    <context-consumer context="theme"></context-consumer>
   </div>
 </context-provider>`
 
