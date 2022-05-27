@@ -1,0 +1,11 @@
+input: docs
+output: .retype
+url: # Add your website address here
+branding:
+  title: wc-context
+  label: Docs
+links:
+  - text: Getting Started
+    link: https://retype.com/guides/getting-started/
+footer:
+  copyright: '&copy; Copyright Luiz Américo Pereira Câmara {{ year }}. All rights reserved.'
