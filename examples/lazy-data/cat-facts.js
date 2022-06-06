@@ -1,17 +1,16 @@
 import { LitElement, html } from 'lit'
-import { withContext } from '../../lit.js'
+import { ContextConsumer } from '../../consumer.js'
 
-class CatFacts extends withContext(LitElement) {
-  static properties = {
-    fact: { attribute: false, context: 'catFact' },
-  }
+class CatFacts extends LitElement {
+  // using controller
+  catFactContext = new ContextConsumer(this, 'catFact')
 
   render() {
-    if (!this.fact) {
+    if (!this.catFactContext.value) {
       return html`<div>No fact defined. Wait 10 seconds</div>`
     }
 
-    const { error, data, loading } = this.fact
+    const { error, data, loading } = this.catFactContext.value
 
     if (error) {
       return html`<div>Error: ${error}</div>`
