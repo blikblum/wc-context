@@ -70,4 +70,4 @@ const withContext = (Base) => {
   }
 }
 
-export { withContext, createContext }
+export { withContext, createContext, observeContext, registerContext }
