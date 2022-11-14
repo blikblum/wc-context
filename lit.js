@@ -6,6 +6,7 @@ import {
   unobserveContext,
   registerContext,
   updateContext,
+  createContext,
 } from './core.js'
 
 function getFromProperty(provider, property) {
@@ -112,6 +113,6 @@ class ContextProviderDirective extends Directive {
   }
 }
 
-export const contextProvider = directive(ContextProviderDirective)
+const contextProvider = directive(ContextProviderDirective)
 
-export { withContext }
+export { withContext, contextProvider, createContext }

@@ -1,5 +1,5 @@
-import { registerContext, updateContext } from '../core.js'
-import { ContextConsumer } from '../consumer.js'
+import { registerContext, updateContext } from 'wc-context/core.js'
+import { ContextConsumer } from 'wc-context/controllers.js'
 import { LitElement } from 'lit'
 
 const ComponentWithConsumer = class extends LitElement {}

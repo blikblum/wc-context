@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { withContext, contextProvider } from '../lit.js'
+import { withContext, contextProvider } from 'wc-context/lit'
 import { LitElement, html, render } from 'lit'
 
 const Component = withContext(LitElement)

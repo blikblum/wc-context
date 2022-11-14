@@ -1,5 +1,5 @@
-import { observeContext } from '../core.js'
-import { ContextProvider } from '../provider.js'
+import { observeContext } from 'wc-context/core.js'
+import { ContextProvider } from 'wc-context/controllers.js'
 import { LitElement } from 'lit'
 
 const ProviderComponent = class extends LitElement {

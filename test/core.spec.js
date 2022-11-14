@@ -7,7 +7,7 @@ import {
   createContext,
   onContextObserve,
   onContextUnobserve,
-} from '../core'
+} from 'wc-context/core.js'
 
 describe('context', () => {
   let rootEl
