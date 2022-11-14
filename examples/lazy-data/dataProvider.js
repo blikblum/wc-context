@@ -1,4 +1,4 @@
-import { ContextProvider } from '../../provider.js'
+import { ContextProvider } from 'wc-context/controllers.js'
 import { observeData } from './dataService.js'
 
 export class DataProvider extends ContextProvider {

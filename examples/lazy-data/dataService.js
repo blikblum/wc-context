@@ -22,9 +22,13 @@ export function observeData(subscriber) {
       subscriber({ data: {}, error: 'An arbitray error', loading: false })
       return
     }
-    const response = await fetch('https://catfact.ninja/fact')
-    const data = await response.json()
-    subscriber({ data, error: null, loading: false })
+    try {
+      const response = await fetch('https://catfact.ninja/fact')
+      const data = await response.json()
+      subscriber({ data, error: null, loading: false })
+    } catch (error) {
+      subscriber({ data: {}, error, loading: false })
+    }
   }, 10000)
 
   subscriber(undefined)

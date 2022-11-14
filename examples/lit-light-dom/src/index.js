@@ -1,8 +1,8 @@
-import { html } from 'lit'
+import { css, html, LitElement } from 'lit'
 import { styles } from './styles.js'
-import { Component } from './component.js'
+import { withContext, contextProvider } from 'wc-context/lit.js'
 
-class ThemeProvider extends Component {
+class ThemeProvider extends withContext(LitElement) {
   static get properties() {
     return {
       theme: { type: String },
@@ -31,7 +31,7 @@ class ThemeProvider extends Component {
   }
 }
 
-class ThemeConsumer extends Component {
+class ThemeConsumer extends withContext(LitElement) {
   static properties = {
     theme: { type: String, context: 'theme' },
   }
@@ -48,7 +48,7 @@ class ThemeConsumer extends Component {
   }
 }
 
-class TitleProvider extends Component {
+class TitleProvider extends withContext(LitElement) {
   static get properties() {
     return {
       value: { type: String, providedContext: 'title' },
@@ -60,7 +60,7 @@ class TitleProvider extends Component {
   }
 }
 
-class TitleThemeConsumer extends Component {
+class TitleThemeConsumer extends withContext(LitElement) {
   static properties = {
     title: { context: 'title' },
     theme: { context: 'theme' },
@@ -81,12 +81,23 @@ class TitleThemeConsumer extends Component {
   }
 }
 
-class App extends Component {
+class App extends withContext(LitElement) {
   static get properties() {
     return {
       state: { type: Object },
     }
   }
+
+  static get styles() {
+    return [
+      css`
+        .subtitle {
+          margin-top: 8px;
+        }
+      `,
+    ]
+  }
+
   constructor() {
     super()
     this.state = { title: 'one title' }
@@ -107,17 +118,26 @@ class App extends Component {
         <theme-provider>
           <theme-consumer></theme-consumer>
         </theme-provider>
+        <div class="subtitle">Nested providers</div>
         <theme-provider>
           <theme-provider theme="blue" alttheme="yellow">
             <theme-consumer></theme-consumer>
           </theme-provider>
         </theme-provider>
+        <div class="subtitle">Consume two contexts</div>
         <theme-provider>
+          <button @click=${this.toggleTitle}>Toggle title</button>
           <title-provider value=${this.state.title}>
             <titletheme-consumer></titletheme-consumer>
           </title-provider>
         </theme-provider>
-        <button @click=${this.toggleTitle}>Toggle title</button>
+        <div class="subtitle">Using directive</div>
+        <div ${contextProvider('theme', 'blue')}>
+          <theme-consumer></theme-consumer>
+        </div>
+        <div ${contextProvider('theme', 'yellow')}>
+          <theme-consumer></theme-consumer>
+        </div>
       </div>
     `
   }
@@ -128,7 +148,3 @@ customElements.define('theme-consumer', ThemeConsumer)
 customElements.define('title-provider', TitleProvider)
 customElements.define('titletheme-consumer', TitleThemeConsumer)
 customElements.define('context-example', App)
-
-const appEl = document.createElement('context-example')
-
-document.body.appendChild(appEl)

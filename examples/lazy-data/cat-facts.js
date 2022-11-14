@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit'
-import { ContextConsumer } from '../../consumer.js'
+import { ContextConsumer } from 'wc-context/controllers.js'
 
+// no need to use withContext mixin when using reactive controller
 class CatFacts extends LitElement {
   // using controller
   catFactContext = new ContextConsumer(this, 'catFact')
