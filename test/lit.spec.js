@@ -1,6 +1,6 @@
 /* eslint-env jest */
-import { withContext } from '../lit.js'
-import { LitElement, html } from 'lit'
+import { withContext, contextProvider } from '../lit.js'
+import { LitElement, html, render } from 'lit'
 
 const Component = withContext(LitElement)
 
@@ -62,6 +62,7 @@ describe('withContext', () => {
         </lit-provider>
         <lit-nested></lit-nested>
       </div>
+      <div id="lit-root"></div>
     `
     grandfatherEl = document.getElementById('grandfather')
     parentEl = document.getElementById('parent')
@@ -85,5 +86,25 @@ describe('withContext', () => {
       expect(parentEl.propertyContext).toBe(2)
       expect(parentEl.myProp).toBe('zzz')
     })
+  })
+})
+
+function contextProviderTemplate(value) {
+  return html`<div ${contextProvider(
+    'propertyContext',
+    value
+  )}><div><lit-consumer></lit-consumer></div></div></div>`
+}
+
+describe('contextProvider', () => {
+  it('should provide context to child nodes', () => {
+    const litRoot = document.getElementById('lit-root')
+    render(contextProviderTemplate(2), litRoot)
+    const consumer = litRoot.querySelector('lit-consumer')
+    expect(consumer.propertyContext).toBe(2)
+    expect(consumer.myProp).toBe(undefined)
+
+    render(contextProviderTemplate(10), litRoot)
+    expect(consumer.propertyContext).toBe(10)
   })
 })

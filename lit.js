@@ -1,3 +1,6 @@
+import { noChange } from 'lit'
+import { Directive, directive } from 'lit/directive.js'
+
 import {
   observeContext,
   unobserveContext,
@@ -92,5 +95,23 @@ const withContext = (Base) => {
     }
   }
 }
+
+class ContextProviderDirective extends Directive {
+  context
+
+  value
+
+  update(part, [context, value]) {
+    if (!this.context) {
+      registerContext(part.element, context, value)
+      this.context = context
+    } else if (this.value !== value) {
+      updateContext(part.element, this.context, value)
+    }
+    return noChange
+  }
+}
+
+export const contextProvider = directive(ContextProviderDirective)
 
 export { withContext }
