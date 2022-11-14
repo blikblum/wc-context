@@ -15,8 +15,6 @@
     "lit-element",
     "skatejs"
   ],
-  "main": "wc-context.js",
-  "module": "wc-context.js",
   "files": [
     "context-provider.js",
     "context-consumer.js",
@@ -49,6 +47,15 @@
     "lit": "^2.0.2",
     "lit-element": "^2",
     "prettier": "^2.5.1"
+  },
+  "exports": {
+    ".": "./wc-context.js",
+    "./core.js": "./core.js",
+    "./lit.js": "./lit.js",
+    "./lit": "./lit.js",
+    "./controllers.js": "./controllers.js",
+    "./context-consumer.js": "./context-consumer.js",
+    "./context-provider.js": "./context-provider.js"
   },
   "scripts": {
     "format": "prettier lit-element.js lit.js wc-context.js core.js test --write",
