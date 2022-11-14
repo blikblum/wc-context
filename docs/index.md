@@ -20,8 +20,16 @@ Also, does not limit how can be used:
 
 ### Works with Shadow DOM
 
-&nbsp; &nbsp; ✓ Works with shadow dom and slotted content (handles timing issues)<br>
-&nbsp; &nbsp; ✓ Easy to implement unit tests. Most of the time, same as components without context<br>
-&nbsp; &nbsp; ✓ Builtin integration with LitElement<br>
-&nbsp; &nbsp; ✓ Builtin ContextProvider ([Reactive Controller](https://lit.dev/docs/composition/controllers/)) with primitives for lazy loading<br>
-&nbsp; &nbsp; ✓ Builtin context-provider and context-consumer elements<br>
+The context can ben consumed in any level of child node tree regardless of shadow dom boundaries.
+
+It also handles the timing issue when consuming a context inside a slotted content
+
+### Easy to implement unit tests
+
+Most of the time there's no need of special handling to write unit tests. Just set the property that should receive the context value.
+
+When the context is deep in the node tree or are not linked to a property, wrap the component with `context-provider` component or use lit directive
+
+### Lazy loading context data
+
+With ContextProvider ([Reactive Controller](https://lit.dev/docs/composition/controllers/)) is possible to implement data lazy loading.
