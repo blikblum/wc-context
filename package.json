@@ -15,6 +15,7 @@
     "lit-element",
     "lit"
   ],
+  "main": "wc-context.js",
   "files": [
     "context-provider.js",
     "context-consumer.js",
