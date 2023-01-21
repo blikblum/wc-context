@@ -21,7 +21,6 @@
     "context-provider.js",
     "context-consumer.js",
     "core.js",
-    "lit-element.js",
     "lit.js",
     "controllers.js",
     "wc-context.js"
@@ -40,7 +39,6 @@
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",
     "lit": "^2.6.1",
-    "lit-element": "^2.5.1",
     "prettier": "^2.5.1"
   },
   "exports": {
