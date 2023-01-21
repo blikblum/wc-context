@@ -1,15 +1,14 @@
 /* eslint-env jest */
+import { jest } from '@jest/globals'
 import { registerContext, updateContext } from '../core'
 
 import '../context-consumer.js'
 
 describe('context-consumer', () => {
-  let rootEl
   let grandfatherEl
   let grandfather2El
   let parentEl
   let childEl
-  let child3El
 
   beforeEach(() => {
     document.body.innerHTML = `
@@ -29,12 +28,10 @@ describe('context-consumer', () => {
         </context-consumer>
       </div>
     `
-    rootEl = document.getElementById('root')
     grandfatherEl = document.getElementById('grandfather')
     grandfather2El = document.getElementById('grandfather2')
     parentEl = document.getElementById('parent')
     childEl = document.getElementById('child')
-    child3El = document.getElementById('child3')
   })
 
   describe('when is a child of a context provider', () => {

@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals'
 import { observeContext } from 'wc-context/core.js'
 import { ContextProvider } from 'wc-context/controllers.js'
 import { LitElement } from 'lit'

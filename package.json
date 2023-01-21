@@ -15,6 +15,7 @@
     "lit-element",
     "lit"
   ],
+  "type": "module",
   "main": "wc-context.js",
   "files": [
     "context-provider.js",
@@ -30,21 +31,14 @@
       "<rootDir>/dist/",
       "<rootDir>/examples/"
     ],
-    "transformIgnorePatterns": [
-      "/node_modules/(?!(lit|@lit|lit-html|lit-element)/)"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/test/setup.js"
-    ],
     "testEnvironment": "jsdom"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.5",
-    "@babel/plugin-transform-modules-commonjs": "^7.16.5",
     "@web/dev-server": "^0.1.28",
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
-    "jest": "^27.4.5",
+    "jest": "^29.3.1",
+    "jest-environment-jsdom": "^29.3.1",
     "lit": "^2.0.2",
     "lit-element": "^2",
     "prettier": "^2.5.1"
@@ -63,8 +57,6 @@
     "lint": "eslint lit-element.js lit.js wc-context.js core.js test",
     "start": "web-dev-server --open examples/ --node-resolve",
     "start:watch": "web-dev-server --open examples/ --node-resolve --watch",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cover": "jest --coverage"
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   }
 }

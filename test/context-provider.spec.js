@@ -1,4 +1,5 @@
 /* eslint-env jest */
+import { jest } from '@jest/globals'
 import {
   registerContext,
   observeContext,
