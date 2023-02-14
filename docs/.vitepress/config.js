@@ -13,7 +13,7 @@ export default {
       {
         text: 'Guides',
         items: [
-          { text: 'Lit integration', link: '/lit' },
+          { text: 'Lit integration', link: '/lit-integration' },
           { text: 'Custom elements', link: '/custom-elenents' },
           { text: 'Prebuilt components', link: '/prebuilt' },
         ],
