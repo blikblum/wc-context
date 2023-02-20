@@ -11,6 +11,7 @@ export default {
         text: 'Usage',
         items: [
           { text: 'Lit integration', link: '/lit-integration' },
+          { text: 'Reactive controllers', link: '/controllers' },
           { text: 'Generic mixin', link: '/generic-mixin' },
           { text: 'Dedicated elements', link: '/dedicated-elements' },
         ],

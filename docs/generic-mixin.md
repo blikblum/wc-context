@@ -1,4 +1,4 @@
-# Generic Custom Element Mixin
+# Generic custom element mixin
 
 The `withContext` class mixin exported in the root namespace, implements an API similar to DOM `observedAttributes`/`attributeChangedCallback`.
 
