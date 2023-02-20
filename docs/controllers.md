@@ -93,5 +93,44 @@ export class RealTimeProvider extends ContextProvider {
 
 With `ContextConsumer` controller is possible to consume a context
 
-The constructor first parameter is the element, the second parameter is the context id / name and
-the third is the default value
+The constructor first parameter is the element, the second parameter is the context id / name.
+
+Optionally is possible to pass a third parameter, an callback called when context value changes
+
+> When the callback parameter is omitted, the controller calls `requestUpdate` method when context changes.
+> If a callback is passed, `requestUpdate` method is not called. If necessary to trigger a new render,
+> `requestUpdate` should be called manually or a reactive property should be updated
+
+::: code-group
+
+```js [No callback]
+import { LitElement } from 'lit'
+import { ContextConsumer } from 'wc-context/controllers.js'
+
+class ConsumerElement extends LitElement {
+  themeConsumer = new ContextConsumer(this, 'theme')
+
+  render() {
+    return html`<div>Theme: ${this.themeConsumer.value}</div>`
+  }
+}
+```
+
+```js [With callback]
+import { LitElement } from 'lit'
+import { ContextConsumer } from 'wc-context/controllers.js'
+
+class ConsumerElement extends LitElement {
+  themeConsumer = new ContextConsumer(this, 'theme', (value) => {
+    // if theme was declared as a reactive property, no manual request update would be necessary
+    this.theme = value
+    this.requestUpdate()
+  })
+
+  render() {
+    return html`<div>Theme: ${this.theme}</div>`
+  }
+}
+```
+
+:::
