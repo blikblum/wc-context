@@ -9,6 +9,7 @@ import {
   onContextObserve,
   onContextUnobserve,
 } from 'wc-context/core.js'
+import { ContextRequestEvent } from '../core.js'
 
 describe('context', () => {
   let rootEl
@@ -84,7 +85,7 @@ describe('context', () => {
       expect(childEl.otherProp).toBe('value')
     })
 
-    test('should throw when tryin to update a not registered context', () => {
+    test('should throw when trying to update a not registered context', () => {
       expect(() => {
         updateContext(grandfatherEl, 'key2')
       }).toThrow('updateContext: "key2" is not registered')
@@ -92,6 +93,31 @@ describe('context', () => {
         const ctx = createContext('hello')
         updateContext(grandfatherEl, ctx)
       }).toThrow('updateContext: "hello" is not registered')
+    })
+
+    test('should work when "context-request" is handled manually', () => {
+      const listener = jest.fn((event) => {
+        if (event.context === 'manualKey') {
+          event.callback('manualValue')
+        }
+      })
+      grandfatherEl.addEventListener('context-request', listener, {
+        once: true,
+      })
+
+      observeContext(parentEl, 'manualKey')
+      expect(listener).toHaveBeenCalledTimes(1)
+      expect(parentEl.manualKey).toBe('manualValue')
+    })
+
+    test('should work when "context-request" is sent manually', () => {
+      const callback = jest.fn((value, unsubscribe) => {
+        expect(value).toBe('value')
+        unsubscribe()
+      })
+      const event = new ContextRequestEvent('key', callback)
+      parentEl.dispatchEvent(event)
+      expect(callback).toHaveBeenCalledTimes(1)
     })
 
     describe('and registered to a child node', () => {
