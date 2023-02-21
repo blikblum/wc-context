@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import { LitElement } from 'lit'
-import { withContext } from 'wc-context'
+import { withContext } from 'wc-context/mixin.js'
 
 const Component = withContext(HTMLElement)
 const LitComponent = withContext(LitElement)

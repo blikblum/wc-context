@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit'
+import { createContext } from 'wc-context'
 import 'wc-context/context-provider.js'
 import 'wc-context/context-consumer.js'
-import { createContext } from 'wc-context/core.js'
 
 const numCtx = createContext('num') // context could be also a string
 

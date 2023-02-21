@@ -11,7 +11,7 @@ Contexts are provided in an custom element through static `providedContexts` fie
 The `updateContext` method updates the context value. It accepts the context name / id as first argument and value as second. If it was configured to read the value from a property the second argument should be omitted.
 
 ```javascript
-import { withContext } from 'wc-context'
+import { withContext } from 'wc-context/mixin.js'
 
 class Provider extends withContext(HTMLElement) {
   static providedContexts = {
@@ -49,7 +49,7 @@ Optionally is possible to define the observed context with an array where the fi
 > When overriding `connectedCallback` or `disconnectedCallback` is necessary to call the respective super methods.
 
 ```javascript
-import { withContext } from 'wc-context'
+import { withContext } from 'wc-context/mixin.js'
 
 class Consumer extends withContext(HTMLElement) {
   static observedContexts = ['theme', ['title', 'titleProp']]

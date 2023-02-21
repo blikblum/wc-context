@@ -5,7 +5,7 @@ import {
   observeContext,
   unobserveContext,
   createContext,
-} from '../core'
+} from 'wc-context'
 
 import '../context-provider.js'
 

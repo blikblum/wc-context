@@ -16,14 +16,14 @@
     "lit"
   ],
   "type": "module",
-  "main": "wc-context.js",
+  "main": "core.js",
   "files": [
     "context-provider.js",
     "context-consumer.js",
     "core.js",
     "lit.js",
     "controllers.js",
-    "wc-context.js"
+    "mixin.js"
   ],
   "jest": {
     "modulePathIgnorePatterns": [
@@ -44,8 +44,8 @@
     "vue": "^3.2.47"
   },
   "exports": {
-    ".": "./wc-context.js",
-    "./core.js": "./core.js",
+    ".": "./core.js",
+    "./mixin.js": "./mixin.js",
     "./lit.js": "./lit.js",
     "./lit": "./lit.js",
     "./controllers.js": "./controllers.js",

@@ -1,6 +1,7 @@
 /* eslint-env jest */
 import { jest } from '@jest/globals'
 import {
+  ContextRequestEvent,
   registerContext,
   observeContext,
   unobserveContext,
@@ -8,8 +9,7 @@ import {
   createContext,
   onContextObserve,
   onContextUnobserve,
-} from 'wc-context/core.js'
-import { ContextRequestEvent } from '../core.js'
+} from 'wc-context'
 
 describe('context', () => {
   let rootEl

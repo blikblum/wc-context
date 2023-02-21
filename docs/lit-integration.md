@@ -9,7 +9,7 @@ Live example: [version 1](https://codesandbox.io/s/8n89qz95q2) /
 
 The `withContext` class mixin / decorator augments Lit components allowing to connect reactive properties to contexts as a consumer or a provider.
 
-> The Lit class mixin is exported by 'wc-context/lit.js'. Do not confuse with the generic class mixin exported by 'wc-context' root entry point.
+> The Lit class mixin is exported by 'wc-context/lit.js'. Do not confuse with the generic class mixin exported by 'wc-context/mixin.js'.
 
 ### Providing a context
 
