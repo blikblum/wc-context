@@ -39,7 +39,7 @@ function removeOrphan(el, name) {
 }
 
 export class ContextRequestEvent extends Event {
-  constructor(context, callback) {
+  constructor(context, callback, subscribe) {
     super('context-request', {
       bubbles: true,
       cancelable: true,
@@ -47,6 +47,7 @@ export class ContextRequestEvent extends Event {
     })
     this.context = context
     this.callback = callback
+    this.subscribe = subscribe
   }
 }
 
@@ -59,7 +60,7 @@ function sendContextEvent(consumer, context, payload, setter) {
     setter(consumer, value, payload)
     handled = true
   }
-  const event = new ContextRequestEvent(context, callback)
+  const event = new ContextRequestEvent(context, callback, true)
   consumer.dispatchEvent(event)
   return handled
 }
@@ -90,18 +91,22 @@ function registerContext(provider, context, payload, getter = providerGetter) {
   const observers = observerMap[context] || (observerMap[context] = [])
   const orphans = orphanMap[context]
   provider.addEventListener(`context-request`, (event) => {
-    const { target, callback } = event
+    const { target, callback, subscribe } = event
     if (event.context !== context || typeof callback !== 'function') {
       return
     }
     event.stopPropagation()
-    const unsubscribe = () => {
-      removeObserver(provider, context, target)
-    }
     const value = getProviderValue(provider, providedContexts[context])
-    callback(value, unsubscribe)
-    observers.push({ consumer: target, callback, unsubscribe })
-    runListeners(provider, context, 'observe', observers.length)
+    if (subscribe) {
+      const unsubscribe = () => {
+        removeObserver(provider, context, target)
+      }
+      callback(value, unsubscribe)
+      observers.push({ consumer: target, callback, unsubscribe })
+      runListeners(provider, context, 'observe', observers.length)
+    } else {
+      callback(value)
+    }
   })
   if (orphans && orphans.size) {
     orphanResolveQueue.add(context)

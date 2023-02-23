@@ -95,8 +95,9 @@ describe('context', () => {
       }).toThrow('updateContext: "hello" is not registered')
     })
 
-    test('should work when "context-request" is handled manually', () => {
+    test('should trigger "context-request" event when observing context', () => {
       const listener = jest.fn((event) => {
+        expect(event.subscribe).toBe(true)
         if (event.context === 'manualKey') {
           event.callback('manualValue')
         }
@@ -110,14 +111,34 @@ describe('context', () => {
       expect(parentEl.manualKey).toBe('manualValue')
     })
 
-    test('should work when "context-request" is sent manually', () => {
-      const callback = jest.fn((value, unsubscribe) => {
+    test('should handle "context-request" event with falsy subscribe', () => {
+      const callback = jest.fn((value) => {
         expect(value).toBe('value')
-        unsubscribe()
       })
       const event = new ContextRequestEvent('key', callback)
       parentEl.dispatchEvent(event)
       expect(callback).toHaveBeenCalledTimes(1)
+      updateContext(grandfatherEl, 'key', 'newValue')
+      expect(callback).toHaveBeenCalledTimes(1)
+    })
+
+    test('should handle "context-request" event with truthy subscribe', () => {
+      const callback = jest
+        .fn()
+        .mockImplementationOnce((value) => {
+          expect(value).toBe('value')
+        })
+        .mockImplementation((value, unsubscribe) => {
+          expect(value).toBe('newValue')
+          unsubscribe()
+        })
+      const event = new ContextRequestEvent('key', callback, true)
+      parentEl.dispatchEvent(event)
+      expect(callback).toHaveBeenCalledTimes(1)
+      updateContext(grandfatherEl, 'key', 'newValue')
+      expect(callback).toHaveBeenCalledTimes(2)
+      updateContext(grandfatherEl, 'key', 'yetAnotherValue')
+      expect(callback).toHaveBeenCalledTimes(2)
     })
 
     describe('and registered to a child node', () => {
