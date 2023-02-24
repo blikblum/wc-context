@@ -65,6 +65,10 @@ describe('context-provider', () => {
       expect(childEl.key).toBe('value')
     })
 
+    test('should return context value in context property', () => {
+      expect(grandfatherEl.context).toBe('key')
+    })
+
     test('should not be acessible in parent nodes', () => {
       observeContext(rootEl, 'key')
       expect(rootEl.key).toBeUndefined()
@@ -88,6 +92,14 @@ describe('context-provider', () => {
       observeContext(parentEl, 'key')
       grandfatherEl.value = 'value2'
       expect(parentEl.key).toBe('value2')
+    })
+
+    it('should not allow to change the context key', () => {
+      grandfatherEl.context = 'newKey'
+      observeContext(parentEl, 'key')
+      expect(parentEl.key).toBe('value')
+      observeContext(childEl, 'newKey')
+      expect(childEl.key).toBeUndefined()
     })
 
     describe('and have a sibling component ', () => {
@@ -189,6 +201,19 @@ describe('context-provider', () => {
         observeContext(childEl, ctx, 'key')
         expect(childEl.key).toBe('value')
       })
+    })
+  })
+
+  describe('when context key is not defined', () => {
+    beforeEach(() => {
+      grandfatherEl.value = 'value'
+    })
+
+    it('should not update the context', () => {
+      observeContext(parentEl, 'key')
+      observeContext(childEl, 'key')
+      expect(parentEl.key).toBeUndefined()
+      expect(childEl.key).toBeUndefined()
     })
   })
 })
