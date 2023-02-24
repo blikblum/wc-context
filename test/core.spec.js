@@ -1,6 +1,7 @@
 /* eslint-env jest */
 import { jest } from '@jest/globals'
 import {
+  noContext,
   ContextRequestEvent,
   registerContext,
   observeContext,
@@ -277,6 +278,41 @@ describe('context', () => {
         expect(callback).toHaveBeenCalledTimes(1)
         expect(callback).toHaveBeenCalledWith({ count: 0 })
       })
+    })
+  })
+
+  describe('when registered in a node with noContext', () => {
+    beforeEach(() => {
+      registerContext(grandfatherEl, 'key', noContext)
+    })
+
+    test('should not call "context-request" callback while context value === noContext (no subscribe)', () => {
+      const callback = jest.fn((value) => {
+        expect(value).toBe('value')
+      })
+      const event = new ContextRequestEvent('key', callback)
+      parentEl.dispatchEvent(event)
+      expect(callback).toHaveBeenCalledTimes(0)
+      updateContext(grandfatherEl, 'key', noContext)
+      expect(callback).toHaveBeenCalledTimes(0)
+      updateContext(grandfatherEl, 'key', 'value')
+      expect(callback).toHaveBeenCalledTimes(1)
+      updateContext(grandfatherEl, 'key', 'newValue')
+      expect(callback).toHaveBeenCalledTimes(1)
+    })
+
+    test('should not call "context-request" callback while context value === noContext (subscribe)', () => {
+      const callback = jest.fn().mockImplementation((value) => {
+        expect(value).toBe('value')
+      })
+
+      const event = new ContextRequestEvent('key', callback, true)
+      parentEl.dispatchEvent(event)
+      expect(callback).toHaveBeenCalledTimes(0)
+      updateContext(grandfatherEl, 'key', noContext)
+      expect(callback).toHaveBeenCalledTimes(0)
+      updateContext(grandfatherEl, 'key', 'value')
+      expect(callback).toHaveBeenCalledTimes(1)
     })
   })
 

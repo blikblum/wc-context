@@ -1,3 +1,5 @@
+const noContext = Symbol('noContext')
+
 const orphanMap = {}
 
 const resolved = Promise.resolve()
@@ -97,12 +99,19 @@ function registerContext(provider, context, payload, getter = providerGetter) {
     }
     event.stopPropagation()
     const value = getProviderValue(provider, providedContexts[context])
-    if (subscribe) {
+    if (subscribe || value === noContext) {
       const unsubscribe = () => {
         removeObserver(provider, context, target)
       }
-      callback(value, unsubscribe)
-      observers.push({ consumer: target, callback, unsubscribe })
+      if (value !== noContext) {
+        callback(value, unsubscribe)
+      }
+      observers.push({
+        consumer: target,
+        callback,
+        unsubscribe,
+        once: !subscribe,
+      })
       runListeners(provider, context, 'observe', observers.length)
     } else {
       callback(value)
@@ -134,9 +143,17 @@ function updateContext(provider, context, payload) {
 
   const value = getProviderValue(provider, providedContext)
 
+  if (value === noContext) {
+    return
+  }
+
   const observers = observerMap && observerMap[context]
   if (observers) {
-    observers.forEach(({ consumer, callback, unsubscribe }) => {
+    observers.forEach(({ consumer, callback, unsubscribe, once }) => {
+      if (once) {
+        unsubscribe()
+        unsubscribe = undefined
+      }
       callback.call(consumer, value, unsubscribe)
     })
   }
@@ -233,6 +250,7 @@ function onContextUnobserve(provider, context, callback) {
 }
 
 export {
+  noContext,
   createContext,
   registerContext,
   updateContext,
