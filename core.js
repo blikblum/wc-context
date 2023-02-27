@@ -103,15 +103,15 @@ function registerContext(provider, context, payload, getter = providerGetter) {
       const unsubscribe = () => {
         removeObserver(provider, context, target)
       }
-      if (value !== noContext) {
-        callback(value, unsubscribe)
-      }
       observers.push({
         consumer: target,
         callback,
         unsubscribe,
         once: !subscribe,
       })
+      if (value !== noContext) {
+        callback(value, unsubscribe)
+      }
       runListeners(provider, context, 'observe', observers.length)
     } else {
       callback(value)
@@ -148,15 +148,14 @@ function updateContext(provider, context, payload) {
   }
 
   const observers = observerMap && observerMap[context]
-  if (observers) {
-    observers.forEach(({ consumer, callback, unsubscribe, once }) => {
-      if (once) {
-        unsubscribe()
-        unsubscribe = undefined
-      }
-      callback.call(consumer, value, unsubscribe)
-    })
-  }
+  // if we got here, observers is necessarily defined
+  observers.forEach(({ consumer, callback, unsubscribe, once }) => {
+    if (once) {
+      unsubscribe()
+      unsubscribe = undefined
+    }
+    callback.call(consumer, value, unsubscribe)
+  })
 }
 function consumerSetter(consumer, value, name) {
   const oldValue = consumer[name]
@@ -201,16 +200,14 @@ function observeContext(
 
 function removeObserver(provider, context, consumer) {
   const observerMap = provider.__wcContextObserverMap
-  if (observerMap) {
-    const observers = observerMap[context]
-    const consumerIndex = observers.findIndex(
-      (observer) => observer.consumer === consumer
-    )
-    if (consumerIndex !== -1) {
-      observers.splice(consumerIndex, 1)
-    }
-    runListeners(provider, context, 'unobserve', observers.length)
+  const observers = observerMap[context]
+  const consumerIndex = observers.findIndex(
+    (observer) => observer.consumer === consumer
+  )
+  if (consumerIndex !== -1) {
+    observers.splice(consumerIndex, 1)
   }
+  runListeners(provider, context, 'unobserve', observers.length)
 }
 
 function unobserveContext(consumer, context) {

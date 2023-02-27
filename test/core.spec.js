@@ -112,7 +112,7 @@ describe('context', () => {
       expect(parentEl.manualKey).toBe('manualValue')
     })
 
-    test('should handle "context-request" event with falsy subscribe', () => {
+    test('should handle "context-request" event without subscribe', () => {
       const callback = jest.fn((value) => {
         expect(value).toBe('value')
       })
@@ -123,7 +123,19 @@ describe('context', () => {
       expect(callback).toHaveBeenCalledTimes(1)
     })
 
-    test('should handle "context-request" event with truthy subscribe', () => {
+    test('should handle "context-request" event with subscribe - unsubscribe called in first request', () => {
+      const callback = jest.fn((value, unsubscribe) => {
+        expect(value).toBe('value')
+        unsubscribe()
+      })
+      const event = new ContextRequestEvent('key', callback, true)
+      parentEl.dispatchEvent(event)
+      expect(callback).toHaveBeenCalledTimes(1)
+      updateContext(grandfatherEl, 'key', 'newValue')
+      expect(callback).toHaveBeenCalledTimes(1)
+    })
+
+    test('should handle "context-request" event with subscribe - unsubscribe called subsequent request', () => {
       const callback = jest
         .fn()
         .mockImplementationOnce((value) => {
@@ -140,6 +152,20 @@ describe('context', () => {
       expect(callback).toHaveBeenCalledTimes(2)
       updateContext(grandfatherEl, 'key', 'yetAnotherValue')
       expect(callback).toHaveBeenCalledTimes(2)
+    })
+
+    test('should allow to call unsubscribe more than once', () => {
+      const callback = jest.fn((value, unsubscribe) => {
+        unsubscribe()
+        unsubscribe()
+        unsubscribe()
+      })
+
+      const event = new ContextRequestEvent('key', callback, true)
+      parentEl.dispatchEvent(event)
+      expect(callback).toHaveBeenCalledTimes(1)
+      updateContext(grandfatherEl, 'key', 'newValue')
+      expect(callback).toHaveBeenCalledTimes(1)
     })
 
     describe('and registered to a child node', () => {
@@ -395,8 +421,10 @@ describe('context', () => {
       parentEl.contextChangedCallback = callback
 
       observeContext(child3El, 'key')
+      observeContext(child3El, 'otherKey')
       observeContext(parentEl, 'key')
       registerContext(grandfatherEl, 'key', 'value')
+      registerContext(grandfather2El, 'otherKey', 'otherValue')
     })
 
     test('should call contextChangedCallback in the observer', () => {
@@ -406,6 +434,7 @@ describe('context', () => {
 
     test('should update the observer context', () => {
       expect(parentEl.key).toBe('value')
+      expect(child3El.otherKey).toBe('otherValue')
     })
 
     test('should not update the observer context of not children', () => {
