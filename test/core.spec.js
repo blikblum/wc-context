@@ -86,6 +86,10 @@ describe('context', () => {
       expect(childEl.otherProp).toBe('value')
     })
 
+    test('should not crash when unobserving a not observed context', () => {
+      unobserveContext(childEl, 'key')
+    })
+
     test('should throw when trying to update a not registered context', () => {
       expect(() => {
         updateContext(grandfatherEl, 'key2')

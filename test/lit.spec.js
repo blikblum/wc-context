@@ -25,6 +25,12 @@ class ConsumerComponent extends Component {
   static observedContexts = ['propertyContext']
 }
 
+class ConsumerOnlyDecoratorComponent extends Component {
+  static properties = {
+    myProp: { context: 'otherContext' },
+  }
+}
+
 class NestedComponent extends Component {
   static properties = {
     myProp: { providedContext: 'propertyContext' },
@@ -47,17 +53,20 @@ class NestedComponent extends Component {
 customElements.define('lit-component', Component)
 customElements.define('lit-provider', ProviderComponent)
 customElements.define('lit-consumer', ConsumerComponent)
+customElements.define('lit-consumer2', ConsumerOnlyDecoratorComponent)
 customElements.define('lit-nested', NestedComponent)
 
 // unable to create custom elements with jsdom
 describe('withContext', () => {
   let grandfatherEl
   let parentEl
+  let parent3El
   beforeEach(() => {
     document.body.innerHTML = `
       <div id="root">
         <lit-provider id="grandfather">
           <lit-consumer id="parent"></lit-consumer>
+          <lit-consumer2 id="parent3"></lit-consumer2>
           <div id="parent2"></div>
         </lit-provider>
         <lit-nested></lit-nested>
@@ -66,12 +75,14 @@ describe('withContext', () => {
     `
     grandfatherEl = document.getElementById('grandfather')
     parentEl = document.getElementById('parent')
+    parent3El = document.getElementById('parent3')
   })
 
   describe('with providedContext property declaration', () => {
     test('should provide contexts to child element', async () => {
       expect(parentEl.propertyContext).toBe('test')
       expect(parentEl.myProp).toBe('xxx')
+      expect(parent3El.myProp).toBe('xxx')
     })
 
     test('should provide contexts to child element inside shadow dom', async () => {
@@ -103,6 +114,10 @@ describe('contextProvider', () => {
     const consumer = litRoot.querySelector('lit-consumer')
     expect(consumer.propertyContext).toBe(2)
     expect(consumer.myProp).toBe(undefined)
+
+    // update with same value
+    render(contextProviderTemplate(2), litRoot)
+    expect(consumer.propertyContext).toBe(2)
 
     render(contextProviderTemplate(10), litRoot)
     expect(consumer.propertyContext).toBe(10)

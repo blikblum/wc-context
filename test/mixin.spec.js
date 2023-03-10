@@ -57,9 +57,14 @@ describe('withContext', () => {
     parentEl = document.getElementById('parent')
   })
 
-  test('should define a updatContext method in element', () => {
+  test('should define a updateContext method in element', () => {
     const el = new Component()
     expect(el.updateContext).toBeInstanceOf(Function)
+  })
+
+  test('should not crash when updateContext is called in a element without provided context', () => {
+    const el = new Component()
+    el.updateContext('key', 'value')
   })
 
   describe('with providedContexts static property', () => {
