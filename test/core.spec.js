@@ -10,6 +10,7 @@ import {
   createContext,
   onContextObserve,
   onContextUnobserve,
+  getContext,
 } from 'wc-context'
 
 describe('context', () => {
@@ -170,6 +171,11 @@ describe('context', () => {
       expect(callback).toHaveBeenCalledTimes(1)
       updateContext(grandfatherEl, 'key', 'newValue')
       expect(callback).toHaveBeenCalledTimes(1)
+    })
+
+    test('should respond to getContext call', async () => {
+      const value = await getContext(childEl, 'key')
+      expect(value).toBe('value')
     })
 
     describe('and registered to a child node', () => {
@@ -343,6 +349,34 @@ describe('context', () => {
       expect(callback).toHaveBeenCalledTimes(0)
       updateContext(grandfatherEl, 'key', 'value')
       expect(callback).toHaveBeenCalledTimes(1)
+    })
+
+    test('should resolve getContext when context value is updated', async () => {
+      const contextResolved = jest.fn()
+
+      const promise = new Promise((resolve) => {
+        getContext(childEl, 'key').then((value) => {
+          contextResolved()
+          expect(value).toBe('value')
+          resolve()
+        })
+      })
+
+      updateContext(grandfatherEl, 'key', noContext)
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1)
+      })
+
+      expect(contextResolved).toHaveBeenCalledTimes(0)
+
+      updateContext(grandfatherEl, 'key', 'value')
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1)
+      })
+
+      expect(contextResolved).toHaveBeenCalledTimes(1)
+      return promise
     })
   })
 

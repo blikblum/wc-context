@@ -246,6 +246,13 @@ function onContextUnobserve(provider, context, callback) {
   listeners.push({ callback, type: 'unobserve' })
 }
 
+async function getContext(consumer, context) {
+  return new Promise((resolve) => {
+    const event = new ContextRequestEvent(context, resolve, false)
+    consumer.dispatchEvent(event)
+  })
+}
+
 export {
   noContext,
   createContext,
@@ -257,4 +264,5 @@ export {
   providerGetter,
   onContextObserve,
   onContextUnobserve,
+  getContext,
 }
