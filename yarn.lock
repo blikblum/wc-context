@@ -1708,7 +1708,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/istanbul-reports@npm:^3.0.0":
+"@types/istanbul-lib-report@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/istanbul-lib-report@npm:3.0.0"
+  dependencies:
+    "@types/istanbul-lib-coverage": "*"
+  checksum: 656398b62dc288e1b5226f8880af98087233cdb90100655c989a09f3052b5775bf98ba58a16c5ae642fb66c61aba402e07a9f2bff1d1569e3b306026c59f3f36
+  languageName: node
+  linkType: hard
+
+"@types/istanbul-reports@npm:^3.0.0, @types/istanbul-reports@npm:^3.0.1":
   version: 3.0.1
   resolution: "@types/istanbul-reports@npm:3.0.1"
   dependencies:
@@ -1725,6 +1734,17 @@ __metadata:
     "@types/tough-cookie": "*"
     parse5: ^7.0.0
   checksum: d55402c5256ef451f93a6e3d3881f98339fe73a5ac2030588df056d6835df8367b5a857b48d27528289057e26dcdd3f502edc00cb877c79174cb3a4c7f2198c1
+  languageName: node
+  linkType: hard
+
+"@types/jsdom@npm:^21.1.1":
+  version: 21.1.1
+  resolution: "@types/jsdom@npm:21.1.1"
+  dependencies:
+    "@types/node": "*"
+    "@types/tough-cookie": "*"
+    parse5: ^7.0.0
+  checksum: 7450d6e23aa31b837a1682f0e59b06838aacca85c9d030035f40e21d559169c773aee5cee9244f23c3004b78f7064f0c540ceb808d2f187deb3140f2b0449dee
   languageName: node
   linkType: hard
 
@@ -1771,6 +1791,13 @@ __metadata:
   version: 9.3.0
   resolution: "@types/node@npm:9.3.0"
   checksum: 3561d0c1b7b10381fbc25142feb9499f2a100683d0adcb7996f58f1adbc8cd4b08f53cfd2e848728e744e9efdc9a8e5b101c9fac285abfbbba3ceb851f0c5ea6
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.2.5":
+  version: 20.2.5
+  resolution: "@types/node@npm:20.2.5"
+  checksum: 38ce7c7e9d76880dc632f71d71e0d5914fcda9d5e9a7095d6c339abda55ca4affb0f2a882aeb29398f8e09d2c5151f0b6586c81c8ccdfe529c34b1ea3337425e
   languageName: node
   linkType: hard
 
@@ -6469,6 +6496,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:^5.1.3":
+  version: 5.1.3
+  resolution: "typescript@npm:5.1.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: d9d51862d98efa46534f2800a1071a613751b1585dc78884807d0c179bcd93d6e9d4012a508e276742f5f33c480adefc52ffcafaf9e0e00ab641a14cde9a31c7
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^5.1.3#~builtin<compat/typescript>":
+  version: 5.1.3
+  resolution: "typescript@patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=493e53"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 32a25b2e128a4616f999d4ee502aabb1525d5647bc8955e6edf05d7fbc53af8aa98252e2f6ba80bcedfc0260c982b885f3c09cfac8bb65d2924f3133ad1e1e62
+  languageName: node
+  linkType: hard
+
 "typical@npm:^4.0.0":
   version: 4.0.0
   resolution: "typical@npm:4.0.0"
@@ -6688,6 +6735,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wc-context@workspace:."
   dependencies:
+    "@types/istanbul-lib-report": ^3.0.0
+    "@types/istanbul-reports": ^3.0.1
+    "@types/jsdom": ^21.1.1
+    "@types/node": ^20.2.5
     "@web/dev-server": ^0.1.35
     eslint: ^8.32.0
     eslint-config-prettier: ^8.6.0
@@ -6695,6 +6746,7 @@ __metadata:
     jest-environment-jsdom: ^29.3.1
     lit: ^2.6.1
     prettier: ^2.5.1
+    typescript: ^5.1.3
     vitepress: ^1.0.0-alpha.46
     vue: ^3.2.47
   languageName: unknown

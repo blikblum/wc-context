@@ -67,6 +67,14 @@ function sendContextEvent(consumer, context, payload, setter) {
   return handled
 }
 
+/**
+ * @typedef Context
+ */
+
+/**
+ * @param {string} key Identify the context
+ * @return {Context}
+ */
 function createContext(key) {
   return {
     key,
@@ -76,14 +84,34 @@ function createContext(key) {
   }
 }
 
+/**
+ * @param {HTMLElement} provider HTMLElement acting as a context provider
+ * @param {Object} options
+ * @param {Function} options.getter
+ * @param {*} options.payload
+ * @return {*}
+ */
 function getProviderValue(provider, { getter, payload }) {
   return getter(provider, payload)
 }
 
+/**
+ * @param {HTMLElement} provider HTMLElement acting as a context provider
+ * @param {*} payload Options passed to the callback
+ * @return {*}
+ */
 function providerGetter(provider, payload) {
   return payload
 }
 
+/**
+ *
+ *
+ * @param {HTMLElement} provider HTMLElement acting as a context provider
+ * @param {string | Context} context  Context identifier
+ * @param {*} payload Value passed to getter
+ * @param {Function} [getter=providerGetter]
+ */
 function registerContext(provider, context, payload, getter = providerGetter) {
   const observerMap =
     provider.__wcContextObserverMap || (provider.__wcContextObserverMap = {})
@@ -186,6 +214,14 @@ function registerProvider(consumer, context, provider) {
   providerMap[context] = provider
 }
 
+/**
+ *
+ *
+ * @param {HTMLElement} consumer HTMLElement that consumes a context
+ * @param {string | Context} context Context identifier
+ * @param {*} [payload=context] Value passed to setter
+ * @param {Function} [setter=consumerSetter]
+ */
 function observeContext(
   consumer,
   context,

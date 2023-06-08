@@ -23,7 +23,8 @@
     "core.js",
     "lit.js",
     "controllers.js",
-    "mixin.js"
+    "mixin.js",
+    "types"
   ],
   "jest": {
     "modulePathIgnorePatterns": [
@@ -33,6 +34,10 @@
     "testEnvironment": "jsdom"
   },
   "devDependencies": {
+    "@types/istanbul-lib-report": "^3.0.0",
+    "@types/istanbul-reports": "^3.0.1",
+    "@types/jsdom": "^21.1.1",
+    "@types/node": "^20.2.5",
     "@web/dev-server": "^0.1.35",
     "eslint": "^8.32.0",
     "eslint-config-prettier": "^8.6.0",
@@ -40,6 +45,7 @@
     "jest-environment-jsdom": "^29.3.1",
     "lit": "^2.6.1",
     "prettier": "^2.5.1",
+    "typescript": "^5.1.3",
     "vitepress": "^1.0.0-alpha.46",
     "vue": "^3.2.47"
   },
@@ -60,6 +66,7 @@
     "lint": "eslint lit-element.js lit.js wc-context.js core.js test",
     "start": "web-dev-server --open examples/ --node-resolve",
     "start:watch": "web-dev-server --open examples/ --node-resolve --watch",
-    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
+    "types": "tsc"
   }
 }
