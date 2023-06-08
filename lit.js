@@ -13,7 +13,7 @@ function getFromProperty(provider, property) {
   return provider[property]
 }
 
-const withContext = (Base) => {
+function createClass(Base) {
   return class extends Base {
     static getPropertyDescriptor(name, key, options) {
       const defaultDescriptor = super.getPropertyDescriptor(name, key, options)
@@ -93,6 +93,34 @@ const withContext = (Base) => {
           }
         })
       }
+    }
+  }
+}
+
+/**
+ * @typedef {import('@lit/reactive-element/decorators/base.js').ClassDescriptor} ClassDescriptor
+ */
+
+/**
+ * @template ElementClass
+ * @param {ElementClass | ClassDescriptor} classOrDescriptor - Base element class or decorator descriptor
+ * @returns {ElementClass}
+ */
+function withContext(classOrDescriptor) {
+  // current state of decorators sucks. Lets abuse of duck typing
+  if (typeof classOrDescriptor === 'function') {
+    // constructor -> typescript decorator
+    return createClass(classOrDescriptor)
+  }
+  if (classOrDescriptor.kind === 'class') {
+    // descriptor -> spec decorator
+    const { kind, elements } = classOrDescriptor
+    return {
+      kind,
+      elements,
+      finisher(ctor) {
+        return createClass(ctor)
+      },
     }
   }
 }
