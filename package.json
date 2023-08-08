@@ -34,6 +34,7 @@
     "testEnvironment": "jsdom"
   },
   "devDependencies": {
+    "@esm-bundle/chai": "4.3.4-fix.0",
     "@open-wc/testing": "^3.2.0",
     "@types/istanbul-lib-report": "^3.0.0",
     "@types/istanbul-reports": "^3.0.1",
