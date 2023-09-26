@@ -68,7 +68,13 @@ function sendContextEvent(consumer, context, payload, setter) {
 }
 
 /**
- * @typedef Context
+ * @typedef {Object} Context
+ */
+
+/**
+ * @typedef {Object} ContextGetter
+ * @property {Function} getter Function that is called in provider
+ * @property {any} [payload] Payload passed to getter
  */
 
 /**
@@ -88,7 +94,7 @@ function createContext(key) {
  * @param {HTMLElement} provider HTMLElement acting as a context provider
  * @param {Object} options
  * @param {Function} options.getter
- * @param {*} options.payload
+ * @param {*} [options.payload]
  * @return {*}
  */
 function getProviderValue(provider, { getter, payload }) {
@@ -96,6 +102,7 @@ function getProviderValue(provider, { getter, payload }) {
 }
 
 /**
+ * @description Default context getter implementation. Just returns the payload
  * @param {HTMLElement} provider HTMLElement acting as a context provider
  * @param {*} payload Options passed to the callback
  * @return {*}
@@ -105,8 +112,6 @@ function providerGetter(provider, payload) {
 }
 
 /**
- *
- *
  * @param {HTMLElement} provider HTMLElement acting as a context provider
  * @param {string | Context} context  Context identifier
  * @param {*} payload Value passed to getter
@@ -150,6 +155,12 @@ function registerContext(provider, context, payload, getter = providerGetter) {
   }
 }
 
+/**
+ * @param {HTMLElement} provider HTMLElement that provides a context
+ * @param {string | Context} context Context identifier
+ * @param {string} caller Function caller identifier
+ * @return {ContextGetter}
+ */
 function getProvidedContext(provider, context, caller) {
   const providedContexts = provider.__wcContextProvided
   const providedContext = providedContexts && providedContexts[context]
@@ -161,6 +172,11 @@ function getProvidedContext(provider, context, caller) {
   return providedContext
 }
 
+/**
+ * @param {HTMLElement} provider HTMLElement that provides a context
+ * @param {string | Context} context Context identifier
+ * @param {*} [payload=context] Value passed to provider context getter
+ */
 function updateContext(provider, context, payload) {
   const observerMap = provider.__wcContextObserverMap
   const providedContext = getProvidedContext(provider, context, 'updateContext')
@@ -185,6 +201,8 @@ function updateContext(provider, context, payload) {
     callback.call(consumer, value, unsubscribe)
   })
 }
+
+
 function consumerSetter(consumer, value, name) {
   const oldValue = consumer[name]
   if (oldValue !== value) {
@@ -215,8 +233,7 @@ function registerProvider(consumer, context, provider) {
 }
 
 /**
- *
- *
+ * @description Observes a context in a consumer. Optionally define how the context value is set
  * @param {HTMLElement} consumer HTMLElement that consumes a context
  * @param {string | Context} context Context identifier
  * @param {*} [payload=context] Value passed to setter
@@ -246,6 +263,11 @@ function removeObserver(provider, context, consumer) {
   runListeners(provider, context, 'unobserve', observers.length)
 }
 
+/**
+ * @description Unobserves a context in a consumer
+ * @param {HTMLElement} consumer HTMLElement that consumes a context
+ * @param {string | Context} context Context identifier
+ */
 function unobserveContext(consumer, context) {
   const providerMap = consumer.__wcContextProviderMap
   if (providerMap) {

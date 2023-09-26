@@ -102,10 +102,11 @@ function createClass(Base) {
  */
 
 /**
- * @template ElementClass
- * @param {ElementClass | ClassDescriptor} classOrDescriptor - Base element class or decorator descriptor
- * @returns {ElementClass}
+ * @template {typeof HTMLElement } BaseClass
+ * @param {BaseClass} classOrDescriptor - Base element class
+ * @returns {BaseClass}
  */
+
 function withContext(classOrDescriptor) {
   // current state of decorators sucks. Lets abuse of duck typing
   if (typeof classOrDescriptor === 'function') {
