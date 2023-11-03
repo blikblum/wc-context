@@ -12,6 +12,12 @@ function getWithConfig(provider, config) {
   return config.value
 }
 
+/**
+ * @template {typeof HTMLElement } BaseClass
+ * @param {BaseClass} Base - Base element class
+ * @returns {BaseClass}
+ */
+
 const withContext = (Base) => {
   return class extends Base {
     constructor() {

@@ -5,6 +5,7 @@
   ],
   "exclude": [
     "node_modules",
+    "vite.config.js",
     "*.d.ts"
   ],
   "compilerOptions": {

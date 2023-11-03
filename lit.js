@@ -1,4 +1,4 @@
-import { noChange } from 'lit'
+import { ElementPart, noChange } from 'lit'
 import { Directive, directive } from 'lit/directive.js'
 
 import {
@@ -8,6 +8,10 @@ import {
   updateContext,
   createContext,
 } from './core.js'
+
+/**
+ * @typedef { import('./core.js').Context } Context
+ **/
 
 function getFromProperty(provider, property) {
   return provider[property]
@@ -101,6 +105,8 @@ function createClass(Base) {
  * @typedef {import('@lit/reactive-element/decorators/base.js').ClassDescriptor} ClassDescriptor
  */
 
+// currently add type only for class mixin usage
+
 /**
  * @template {typeof HTMLElement } BaseClass
  * @param {BaseClass} classOrDescriptor - Base element class
@@ -127,10 +133,23 @@ function withContext(classOrDescriptor) {
 }
 
 class ContextProviderDirective extends Directive {
+  /**
+   * @type {string | Context}
+   */
   context
 
+  /**
+   * @type {any}
+   * @memberof ContextProviderDirective
+   */
   value
 
+  /**
+   * @param {ElementPart} part
+   * @param {[Context | string, *]} [context, value] directive arguments
+   * @return {*}
+   * @memberof ContextProviderDirective
+   */
   update(part, [context, value]) {
     if (!this.context) {
       registerContext(part.element, context, value)

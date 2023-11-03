@@ -6,6 +6,10 @@ import {
   updateContext,
 } from './core.js'
 
+/**
+ * @typedef { import('./core.js').Context } Context
+ */
+
 function setValue(host, value, instance) {
   instance._value = value
   if (typeof instance.callback === 'function') {
@@ -15,7 +19,20 @@ function setValue(host, value, instance) {
   }
 }
 
+/**
+ * @callback ContextConsumerCallback
+ * @param {HTMLElement} host
+ * @param {*} [value]
+ * @returns {void}
+ */
+
 class ContextConsumer {
+  /**
+   * Creates an instance of ContextProvider.
+   * @param {HTMLElement} host
+   * @param {string | Context} context Context identifier
+   * @param {ContextConsumerCallback} callback
+   */
   constructor(host, context, callback) {
     host.addController(this)
     this.host = host
@@ -42,6 +59,12 @@ function getFromValue(host, instance) {
 }
 
 class ContextProvider {
+  /**
+   * Creates an instance of ContextProvider.
+   * @param {HTMLElement} host
+   * @param {string | Context} context Context identifier
+   * @param {*} initialValue
+   */
   constructor(host, context, initialValue) {
     if (typeof host.addController === 'function') {
       host.addController(this)

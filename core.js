@@ -202,7 +202,6 @@ function updateContext(provider, context, payload) {
   })
 }
 
-
 function consumerSetter(consumer, value, name) {
   const oldValue = consumer[name]
   if (oldValue !== value) {
@@ -281,6 +280,11 @@ function unobserveContext(consumer, context) {
   removeOrphan(consumer, context)
 }
 
+/**
+ * @param {HTMLElement} provider
+ * @param {string | Context} context Context identifier
+ * @param {Function} callback
+ */
 function onContextObserve(provider, context, callback) {
   const providedContext = getProvidedContext(
     provider,
@@ -292,6 +296,11 @@ function onContextObserve(provider, context, callback) {
   listeners.push({ callback, type: 'observe' })
 }
 
+/**
+ * @param {HTMLElement} provider
+ * @param {string | Context} context Context identifier
+ * @param {Function} callback
+ */
 function onContextUnobserve(provider, context, callback) {
   const providedContext = getProvidedContext(
     provider,
@@ -304,6 +313,13 @@ function onContextUnobserve(provider, context, callback) {
   listeners.push({ callback, type: 'unobserve' })
 }
 
+/**
+ *
+ *
+ * @param {HTMLElement} consumer
+ * @param {Context | string} context
+ * @return {*}
+ */
 async function getContext(consumer, context) {
   return new Promise((resolve) => {
     const event = new ContextRequestEvent(context, resolve, false)

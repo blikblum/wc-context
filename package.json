@@ -57,13 +57,30 @@
     "vue": "^3.3.4"
   },
   "exports": {
-    ".": "./core.js",
-    "./mixin.js": "./mixin.js",
-    "./lit.js": "./lit.js",
-    "./lit": "./lit.js",
-    "./controllers.js": "./controllers.js",
-    "./context-consumer.js": "./context-consumer.js",
-    "./context-provider.js": "./context-provider.js"
+    ".": {
+      "types": "./types/core.d.ts",
+      "default": "./core.js"
+    },
+    "./mixin.js": {
+      "types": "./types/mixin.d.ts",
+      "default": "./mixin.js"
+    },
+    "./lit.js": {
+      "types": "./types/lit.d.ts",
+      "default": "./lit.js"
+    },
+    "./controllers.js": {
+      "types": "./types/controllers.d.ts",
+      "default": "./controllers.js"
+    },
+    "./context-consumer.js": {
+      "types": "./types/context-consumer.d.ts",
+      "default": "./context-consumer.js"
+    },
+    "./context-provider.js": {
+      "types": "./types/context-provider.d.ts",
+      "default": "./context-provider.js"
+    }
   },
   "scripts": {
     "docs:dev": "vitepress dev docs",
@@ -76,6 +93,6 @@
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
     "test-example:wtr": "web-test-runner examples/testing/wtr.test.js --node-resolve --puppeteer",
     "test-example:vitest": "vitest vitest.test.js --run --environment jsdom",
-    "types": "tsc"
+    "types": "tsc --project tsconfig.types.json"
   }
 }
