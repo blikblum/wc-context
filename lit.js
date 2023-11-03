@@ -158,6 +158,7 @@ class ContextProviderDirective extends Directive {
     } else if (this.value !== value) {
       updateContext(part.element, this.context, value)
     }
+    this.value = value
     return noChange
   }
 }
