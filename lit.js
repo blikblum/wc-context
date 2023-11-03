@@ -1,4 +1,4 @@
-import { ElementPart, noChange } from 'lit'
+import { noChange } from 'lit'
 import { Directive, directive } from 'lit/directive.js'
 
 import {
@@ -11,6 +11,7 @@ import {
 
 /**
  * @typedef { import('./core.js').Context } Context
+ * @typedef { import('lit').ElementPart } ElementPart
  **/
 
 function getFromProperty(provider, property) {

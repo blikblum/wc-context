@@ -1,4 +1,5 @@
 export type Context = import('./core.js').Context;
+export type ElementPart = import('lit').ElementPart;
 export type ClassDescriptor = import('@lit/reactive-element/decorators/base.js').ClassDescriptor;
 /**
  * @typedef {import('@lit/reactive-element/decorators/base.js').ClassDescriptor} ClassDescriptor
@@ -33,6 +34,5 @@ declare class ContextProviderDirective extends Directive {
     update(part: ElementPart, [context, value]?: [Context | string, any]): any;
 }
 import { Directive } from 'lit/directive.js';
-import { ElementPart } from 'lit';
 export { createContext };
 //# sourceMappingURL=lit.d.ts.map
