@@ -1,8 +1,10 @@
 # Testing
 
-wc-context allows to test components that use contexts straight forward
+Components that use contexts can be tested with minimal, if none, adaptations when compared with standard ones.
 
-Complete source code can be found at [testing example folder](../examples/testing/)
+## TLDR
+
+Check [Vitest](https://vitest.dev/) and [Web Test Runner](https://modern-web.dev/docs/test-runner/overview/) test suites at [testing example folder](../examples/testing/). The library itself is [tested](../test/) with [Jest](https://jestjs.io/).
 
 > The examples use @open-wc/testing that provides time saving utilities
 
@@ -36,9 +38,9 @@ it('test foo property that consumes a context', async () => {
 })
 ```
 
-## Context consumed with controller/directive/dedicated elements
+## Context consumed with controller/dedicated elements
 
-Testing a component whose context value is not reflected in a property, e.g., when using ContextConsumer controller, requires that the context be provided explicitely.
+Testing a component whose context value is not reflected in a property, e.g., when using `ContextConsumer` controller, requires that the context be provided explicitly.
 
 Component to be tested definition
 
