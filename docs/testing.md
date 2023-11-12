@@ -4,7 +4,7 @@ Components that use contexts can be tested with minimal, if none, adaptations wh
 
 ## TLDR
 
-Check [Vitest](https://vitest.dev/) and [Web Test Runner](https://modern-web.dev/docs/test-runner/overview/) test suites at [testing example folder](../examples/testing/). The library itself is [tested](../test/) with [Jest](https://jestjs.io/).
+Check [Vitest](https://vitest.dev/) and [Web Test Runner](https://modern-web.dev/docs/test-runner/overview/) test suites at [testing example folder](https://github.com/blikblum/wc-context/tree/master/examples/testing). The library itself is [tested](https://github.com/blikblum/wc-context/tree/master/test) with [Jest](https://jestjs.io/).
 
 > The examples use @open-wc/testing that provides time saving utilities
 
@@ -72,7 +72,6 @@ it('test foo property that consumes a context', async () => {
   expect(el).shadowDom.to.equal('<div>fooContext: bar</div>')
 })
 ```
-
 
 Provide context using `registerContext` in a parent node
 

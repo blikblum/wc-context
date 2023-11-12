@@ -1,7 +1,7 @@
 export default {
   title: 'wc-context',
   description: 'Context for web components',
-  base: 'wc-context',
+  base: '/wc-context/',
   themeConfig: {
     sidebar: [
       {
@@ -30,5 +30,9 @@ export default {
         ],
       },
     ],
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2018-present Luiz Américo Pereira Câmara',
+    },
   },
 }

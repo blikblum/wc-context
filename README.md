@@ -15,10 +15,11 @@
 &nbsp; &nbsp; ✓ Builtin ContextProvider ([Reactive Controller](https://lit.dev/docs/composition/controllers/)) with primitives for lazy loading<br>
 &nbsp; &nbsp; ✓ Builtin context-provider and context-consumer elements<br>
 &nbsp; &nbsp; ✓ Conforms with the [Context protocol](https://github.com/webcomponents-cg/community-protocols/blob/main/proposals/context.md)<br>
+&nbsp; &nbsp; ✓ Full code coverage<br>
 
 ### Live example
 
-- Lit integration: [Shadow DOM](https://codesandbox.io/p/sandbox/wc-context-example-shadow-dom-vite-nkymx3) /  
+- Lit integration: [Shadow DOM](https://codesandbox.io/p/sandbox/wc-context-example-shadow-dom-vite-nkymx3) /
 
 ### Usage
 
@@ -27,4 +28,4 @@ Check the documentation https://blikblum.github.io/wc-context/
 ### License
 
 MIT
-Copyright © 2022 Luiz Américo Pereira Câmara
+Copyright © 2023 Luiz Américo Pereira Câmara aka blikblum

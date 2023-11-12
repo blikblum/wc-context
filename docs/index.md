@@ -1,3 +1,7 @@
+---
+title: About
+---
+
 # wc-context
 
 wc-context is a Javascript library that implements a way to share data between Web Components (in fact, between any HTMLElement). While is inspired by React Context, hence the name, it is designed to fit the most common usage patterns in Web Components ecosystem.
@@ -37,3 +41,13 @@ When the context is deep in the node tree or are not linked to a property use Li
 ### Lazy loading context data
 
 With `ContextProvider` ([Reactive Controller](https://lit.dev/docs/composition/controllers/)) is possible to implement [data lazy loading](./controllers.md#subclassing-contextprovider).
+
+### Well tested
+
+100% code coverage
+
+## License
+
+MIT
+
+Copyright © 2018 - present Luiz Américo Pereira Câmara aka blikblum
